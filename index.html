@@ -1,19 +1,3 @@
-<!--
-INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs
-Website scaffold built on top of nerfies/nerfies.github.io structure.
-This single file is a drop-in replacement for your root index.html.
-If your repo already has extra CSS/JS, keep them; this file uses minimal inline CSS + one small JS (rollouts.js) you’ll add under /js/.
-
-Folders assumed by this page:
-  /static/images/    (teaser.jpg/png, method.svg, thumbs)
-  /static/videos/    (short .mp4/.webm rollouts)
-  /static/paper/     (insight_icra26.pdf)
-  /static/downloads/ (checkpoints, feature dumps, reproduce_figs.zip)
-  /js/rollouts.js    (rollout metadata + filter rendering)
-  /static/bibtex.bib (BibTeX entry)
-
-Replace TODO: ... markers with your content.
--->
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,121 +10,128 @@ Replace TODO: ... markers with your content.
   <meta property="og:type" content="website"/>
   <meta property="og:image" content="static/images/teaser.jpg"/>
   <link rel="icon" href="static/images/favicon.ico"/>
-  <style>
-    /* --- layout tone: simple, flowing, no boxes --- */
-    :root{
-      --bg:#ffffff; --ink:#1a1a1a; --muted:#555; --accent:#007acc;
-      --maxw:1100px; --gap:28px;
-    }
-    html,body{background:var(--bg);color:var(--ink);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:36px 20px}
-    section{margin-top:48px}
-    h1{font-size:clamp(32px,5vw,52px);margin:.2em 0 .1em}
-    h2{font-size:clamp(24px,3.2vw,36px);margin:.2em 0 .4em}
-    .subtitle{color:var(--muted);font-size:1.05rem;line-height:1.6}
 
-    /* remove card/panel look */
-    .panel, .card { background:transparent; box-shadow:none; border:none; }
+  <style>
+    /* ---- light, flowing, OpenVLA-like ---- */
+    :root{
+      --bg:#fff; --ink:#121212; --muted:#5b5b5b; --accent:#0b74d1;
+      --maxw: 1060px; --gap: 28px;
+    }
+    html,body{background:var(--bg);color:var(--ink);font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:28px 20px 80px}
+
+    /* nav */
+    nav{position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid #eee}
+    nav .navwrap{max-width:var(--maxw);margin:0 auto;display:flex;gap:18px;align-items:center;padding:10px 20px}
+    nav a{color:var(--ink);padding:6px 8px;border-radius:6px}
+    nav a:hover{background:#f6f8fb}
+
+    /* type + spacing */
+    h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:.2em 0 .25em}
+    h2{font-size:clamp(24px,3.2vw,36px);line-height:1.2;margin:1.6em 0 .6em}
+    h3{font-size:1.2rem;margin:1.1em 0 .4em}
+    p{line-height:1.7}
+    .subtitle{color:var(--muted);font-size:1.05rem}
+
+    /* hero buttons */
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;background:#eef3f8;border:1px solid #d9e2ec;color:var(--ink)}
+
+    /* sections */
+    section{margin-top:48px}
     figure{margin:0}
     figcaption{color:var(--muted);font-size:.95rem;margin-top:8px}
 
-    /* hero badges, lighter */
-    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:8px;background:#eef3f8;border:1px solid #d9e2ec;color:var(--ink);text-decoration:none}
-    .btn strong{color:var(--accent)}
-
-    /* video sections */
-    .fullvideo{position:relative}
+    /* media */
     .fullvideo video{width:100%;height:auto;border-radius:12px}
-    .unmute-tip{position:absolute;right:12px;bottom:12px;background:#0009;color:#fff;padding:6px 10px;border-radius:8px;font-size:.9rem;display:none}
+    .method-grid{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+    @media (min-width: 900px){ .method-grid{grid-template-columns:1fr 1fr} }
 
-    /* rollouts: simple flow, not cards */
-    #filters{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 16px 0}
-    #filters select{background:#fff;color:var(--ink);border:1px solid #ccc;border-radius:6px;padding:8px}
-    #rollout-list{display:grid;grid-template-columns:1fr;gap:24px}
-    .rollout figure{display:block}
-    .rollout video{width:100%;height:auto;border-radius:10px}
-    .rollout .meta{color:#666;margin:6px 0 0 0}
+    /* results sub-nav */
+    .results-nav{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 14px 0}
+    .results-nav .btn{background:#f6f8fb;border-color:#e6edf3}
 
-    nav{position:sticky;top:0;background:#fff;z-index:20;border-bottom:1px solid #eee}
-    nav .navwrap{max-width:var(--maxw);margin:0 auto;display:flex;gap:18px;align-items:center;padding:10px 20px}
-    nav a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:6px}
-    nav a:hover{background:#f6f8fb}
-
-    .table-card{background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:var(--shadow);overflow:auto}
+    /* table */
+    .table-card{background:#fff;border:1px solid #ddd;border-radius:10px;overflow:auto}
     .table-card table{width:100%;border-collapse:collapse;min-width:720px}
     .table-card th,.table-card td{padding:10px 12px;text-align:center;border-bottom:1px solid #eee;white-space:nowrap}
     .table-card th:first-child,.table-card td:first-child{text-align:left}
     .table-card thead th{font-weight:700;background:#f3f5f7;color:#333}
-    .table-card tbody tr:hover{background:#fafbfc}
-    .kpi-up{color:#156f00;font-weight:700}     /* ↑ higher is better */
-    .kpi-down{color:#0054a6;font-weight:700}   /* ↓ lower is better */
-    .caption{color:var(--muted);font-size:.95rem;margin-top:8px}
+    .kpi-up{color:#156f00;font-weight:700}
+    .kpi-down{color:#0054a6;font-weight:700}
+
+    /* rollouts (simple flow) */
+    #filters{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 16px}
+    #filters select{background:#fff;color:var(--ink);border:1px solid #ccc;border-radius:6px;padding:8px}
+    #rollout-list{display:grid;grid-template-columns:1fr;gap:28px}
+    .rollout video{width:100%;height:auto;border-radius:10px}
+    .meta{color:#666;margin-top:6px}
   </style>
 </head>
-<!-- HEADLINE -->
-<section id="top">
-  <h1>INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs</h1>
-  <p class="subtitle">
-    Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts.
-  </p>
-  <div class="badges">
-    <a class="btn" href="https://github.com/ulaskarli/insight-vla-help-triggers"><strong>Code</strong></a>
-    <a class="btn" href="#bibtex">BibTeX</a>
-    <a class="btn" href="https://arxiv.org/abs/TO-BE-ADDED">arXiv</a>
-    <a class="btn" href="mailto:ulasberk.karli@yale.edu">Contact</a>
-  </div>
-  <p class="subtitle" style="margin-top:10px">Authors: Ulas Berk Karli, Ziyao Shangguan, Tesca Fitzgerald</p>
-</section>
+<body>
+  <nav>
+    <div class="navwrap">
+      <a href="#top"><strong>INSIGHT</strong></a>
+      <a href="#demo">Video</a>
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#rollouts">Rollouts</a>
+      <a href="#bibtex">BibTeX</a>
+      <a href="#team">Team</a>
+    </div>
+  </nav>
 
-<!-- DEMO VIDEO (with sound) -->
-<section id="demo" class="fullvideo">
-  <!-- Browsers block autoplay with audio. Use controls so sound plays when the user clicks. -->
-  <video src="static/videos/icra26_video.mp4"
-         poster="static/images/icra_teaser.svg"
-         controls playsinline preload="metadata"></video>
-  <div class="unmute-tip" id="unmute-tip">tip: click ▶ to play with sound</div>
-</section>
-
-<script>
-  // show a tiny hint on first load (optional)
-  const tip = document.getElementById('unmute-tip');
-  if (tip) { tip.style.display = 'block'; setTimeout(()=> tip.style.display='none', 3500); }
-</script>
-    </header>
-
-    <!-- Abstract -->
-    <section id="abstract" class="panel card">
-      <h2>Abstract</h2>
-      <p>Recent Vision–Language–Action (VLA) models exhibit strong generalization but lack mechanisms to anticipate failures and request timely human help. <strong>INSIGHT</strong> introduces a learning framework that leverages token‑level uncertainty signals to predict when intervention is needed. Built on top of π₀‑FAST, our approach extracts entropy, log‑probability, and Dirichlet‑based estimates of aleatoric and epistemic uncertainty, then trains compact transformer classifiers to map these sequences to help triggers. We study both strong and weak supervision regimes, comparing their effectiveness across in‑distribution and out‑of‑distribution tasks. Strong labels capture fine‑grained uncertainty dynamics for reliable detection, while weak labels, though noisier, remain competitive when training and evaluation align—offering scalability where dense annotation is impractical. Crucially, modeling temporal evolution of token‑level uncertainty yields far greater predictive power than static sequence‑level scores. This work provides the first systematic evaluation of uncertainty‑based introspection in VLAs, paving the way for active learning and real‑time error mitigation through selective human intervention.</p>
+  <main class="wrap">
+    <!-- HEADLINE -->
+    <section id="top">
+      <h1>INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs</h1>
+      <p class="subtitle">Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts.</p>
+      <div class="badges">
+        <a class="btn" href="https://github.com/ulaskarli/insight-vla-help-triggers"><strong>Code</strong></a>
+        <a class="btn" href="https://arxiv.org/abs/TO-BE-ADDED">arXiv</a>
+        <a class="btn" href="#bibtex">BibTeX</a>
+        <a class="btn" href="mailto:ulasberk.karli@yale.edu">Contact</a>
+      </div>
+      <p class="subtitle" style="margin-top:8px">Ulas Berk Karli · Ziyao Shangguan · Tesca Fitzgerald</p>
     </section>
 
-    <!-- Method -->
-    <section id="method" class="panel card">
+    <!-- DEMO VIDEO (plays with sound on click) -->
+    <section id="demo" class="fullvideo">
+      <video src="static/videos/icra26_video.mp4" poster="static/images/icra_teaser.svg" controls playsinline preload="metadata"></video>
+    </section>
+
+    <!-- ABSTRACT -->
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p>Recent Vision–Language–Action (VLA) models exhibit strong generalization but lack mechanisms to anticipate failures and request timely human help. <strong>INSIGHT</strong> introduces a learning framework that leverages token-level uncertainty signals to predict when intervention is needed. Built on top of π₀-FAST, our approach extracts entropy, log-probability, and Dirichlet-based estimates of aleatoric and epistemic uncertainty, then trains compact transformer classifiers to map these sequences to help triggers. We study both strong and weak supervision regimes, comparing their effectiveness across in-distribution and out-of-distribution tasks. Strong labels capture fine-grained uncertainty dynamics for reliable detection, while weak labels, though noisier, remain competitive when training and evaluation align—offering scalability where dense annotation is impractical. Crucially, modeling temporal evolution of token-level uncertainty yields far greater predictive power than static sequence-level scores. This work provides the first systematic evaluation of uncertainty-based introspection in VLAs, paving the way for active learning and real-time error mitigation through selective human intervention.</p>
+    </section>
+
+    <!-- METHOD -->
+    <section id="method">
       <h2>Method</h2>
-      <div class="twocol">
+      <div class="method-grid">
         <figure>
-          <img src="static/images/icra_teaser.svg" alt="Method diagram: token distributions → uncertainty features → transformer → help/no-help"/>
-          <figcaption>INSIGHT consumes token distributions from a VLA (e.g., π₀‑FAST), computes uncertainty features, and predicts help triggers online.</figcaption>
+          <img src="static/images/icra_teaser.svg" alt="Method: token distributions → uncertainty features → transformer → help/no-help">
+          <figcaption>INSIGHT consumes token distributions from a VLA (e.g., π₀-FAST), computes uncertainty features, and predicts help triggers online.</figcaption>
         </figure>
         <div>
           <ul>
-            <li><strong>Inputs:</strong> per-token distributions → features: entropy, −log p, aleatoric (AU) and epistemic (EU) uncertainty.</li>
-            <li><strong>Decision module:</strong> compact transformer over short windows, outputs <em>help/no-help</em> at step <em>t</em>.</li>
-            <li><strong>Training regimes:</strong> <em>Strong</em> (step labels) and <em>Weak</em> (episode labels, MIL-style) + CP baselines for comparison.</li>
-            <li><strong>Deployment:</strong> triggers enable teleop takeover or preference queries; success episodes see fewer interrupts, fails get early warnings.</li>
+            <li><strong>Inputs:</strong> per-token distributions → entropy, −log p, aleatoric (AU), epistemic (EU).</li>
+            <li><strong>Decision:</strong> compact transformer over short windows → help/no-help at step t.</li>
+            <li><strong>Training:</strong> <em>Strong</em> (step labels) and <em>Weak</em> (episode labels, MIL) with CP baselines.</li>
+            <li><strong>Deployment:</strong> triggers enable teleop or preference queries; fewer interrupts on successes, earlier warnings on fails.</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- Results at a glance -->
-    <section id="results" class="panel card">
+    <!-- RESULTS -->
+    <section id="results">
       <h2>Results</h2>
 
-      <!-- Quick sub-nav -->
-      <div class="results-nav" style="display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 18px 0">
-        <a class="btn" href="#res-overview">Overview</a>
+      <div class="results-nav">
         <a class="btn" href="#res-id">In-Distribution</a>
         <a class="btn" href="#res-ds">Distribution-Shift</a>
         <a class="btn" href="#res-lid">Large In-Distribution</a>
@@ -148,122 +139,66 @@ Replace TODO: ... markers with your content.
         <a class="btn" href="#res-timing">Help Timing</a>
       </div>
 
-      <!-- 0) Overview (headline numbers) -->
-      <section id="res-overview" style="margin-top:6px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Overview</h3>
-        <div class="metrics">
-          <div class="metric"><div class="v" id="m_id">TODO</div><div>In-Distribution F1 (Strong)</div></div>
-          <div class="metric"><div class="v" id="m_shift">TODO</div><div>Shifted Eval F1 (Strong→Weak)</div></div>
-          <div class="metric"><div class="v" id="m_ttfh">TODO</div><div>TTFH ↓ (Fail Episodes)</div></div>
-        </div>
-      </section>
-
-      <!-- 1) In-Distribution (boxplot) -->
-      <section id="res-id" style="margin-top:30px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">In-Distribution Performance</h3>
+      <section id="res-id">
+        <h3>In-Distribution Performance</h3>
         <figure>
-          <img src="static/images/ID_sign.svg" alt="In-distribution boxplots comparing INSIGHT to CP baselines across folds.">
-          <figcaption>
-            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P).
-            Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds.
-            Error bars indicate 1 standard deviation.
-            Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.
-          </figcaption>
+          <img src="static/images/ID_sign.svg" alt="In-distribution boxplots comparing INSIGHT vs CP baselines across folds.">
+          <figcaption>Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P). Each box plot indicates mean (dashed) and median (solid) across folds; error bars are ±1 sd. Significance by paired Wilcoxon (two-sided): * p&lt;0.05, ** p&lt;0.01.</figcaption>
         </figure>
       </section>
 
-      <!-- 2) Distribution Shift (boxplot) -->
-      <section id="res-ds" style="margin-top:30px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Distribution-Shift Performance</h3>
+      <section id="res-ds">
+        <h3>Distribution-Shift Performance</h3>
         <figure>
-          <img src="static/images/OOD.svg" alt="Distribution-shift boxplots comparing methods across folds.">
-          <figcaption>
-            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P).
-            Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds.
-            Error bars indicate 1 standard deviation.
-            Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.
-          </figcaption>
+          <img src="static/images/OOD.svg" alt="Distribution-shift boxplots across folds.">
+          <figcaption>Same caption as above for boxplots (INSIGHT vs CP-E/CP-P, mean/median, ±1 sd, Wilcoxon significance).</figcaption>
         </figure>
       </section>
 
-      <!-- 3) Large In-Distribution (boxplot) -->
-      <section id="res-lid" style="margin-top:30px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Large In-Distribution Performance</h3>
+      <section id="res-lid">
+        <h3>Large In-Distribution Performance</h3>
         <figure>
-          <img src="static/images/LID.svg" alt="Large in-distribution boxplots comparing methods across folds.">
-          <figcaption>
-            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P).
-            Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds.
-            Error bars indicate 1 standard deviation.
-            Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.
-          </figcaption>
+          <img src="static/images/LID.svg" alt="Large in-distribution boxplots across folds.">
+          <figcaption>Same caption as above for boxplots.</figcaption>
         </figure>
       </section>
 
-      <!-- 4) Simulation OOD (bar/plot) -->
-      <section id="res-ood" style="margin-top:30px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Simulation-OOD</h3>
+      <section id="res-ood">
+        <h3>Simulation-OOD</h3>
         <figure>
           <img src="static/images/Sim_OOD.svg" alt="Simulation OOD performance summary.">
           <figcaption>Performance under simulated OOD setup.</figcaption>
         </figure>
       </section>
 
-      <!-- 4) Timing -->
-      <section id="res-timing" style="margin-top:30px">
-      <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Help Timing & Frequency</h3>
-
-      <div class="table-card">
-        <table class="table-metrics">
-          <thead>
-            <tr>
-              <th>Method</th>
-              <th>TTFH (fail) <span class="kpi-down">↓</span></th>
-              <th>Triggers<sub>succ</sub> <span class="kpi-down">↓</span></th>
-              <th>Triggers<sub>fail</sub> (≥ 1 ok)</th>
-              <th>Trigger Rate (success) <span class="kpi-down">↓</span></th>
-              <th>Trigger Rate (fail) <span class="kpi-up">↑</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>CP-W (Entropy)</td>
-              <td>6.891 &plusmn; 2.257</td>
-              <td>0.457 &plusmn; 0.302</td>
-              <td>1.721 &plusmn; 0.739</td>
-              <td>0.031 &plusmn; 0.020</td>
-              <td>0.118 &plusmn; 0.050</td>
-            </tr>
-            <tr>
-              <td><strong>Strong Superv.</strong></td>
-              <td><strong>5.597 &plusmn; 0.809</strong></td>
-              <td>0.710 &plusmn; 0.440</td>
-              <td><strong>7.062 &plusmn; 1.225</strong></td>
-              <td>0.047 &plusmn; 0.029</td>
-              <td><strong>0.472 &plusmn; 0.081</strong></td>
-            </tr>
-            <tr>
-              <td>Weak Superv.</td>
-              <td>7.929 &plusmn; 1.867</td>
-              <td><strong>0.122 &plusmn; 0.172</strong></td>
-              <td>1.566 &plusmn; 1.025</td>
-              <td><strong>0.008 &plusmn; 0.011</strong></td>
-              <td>0.105 &plusmn; 0.069</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p class="caption">
-        Time-to-first-help (TTFH; lower is better) and trigger statistics by method.
-        As desired, success episodes show lower trigger rates, while failing episodes trigger more frequently and earlier.
-      </p>
+      <section id="res-timing">
+        <h3>Help Timing & Frequency</h3>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>TTFH (fail) <span class="kpi-down">↓</span></th>
+                <th>Triggers<sub>succ</sub> <span class="kpi-down">↓</span></th>
+                <th>Triggers<sub>fail</sub> (≥ 1 ok)</th>
+                <th>Trigger Rate (success) <span class="kpi-down">↓</span></th>
+                <th>Trigger Rate (fail) <span class="kpi-up">↑</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>CP-W (Entropy)</td><td>6.891 ± 2.257</td><td>0.457 ± 0.302</td><td>1.721 ± 0.739</td><td>0.031 ± 0.020</td><td>0.118 ± 0.050</td></tr>
+              <tr><td><strong>Strong Superv.</strong></td><td><strong>5.597 ± 0.809</strong></td><td>0.710 ± 0.440</td><td><strong>7.062 ± 1.225</strong></td><td>0.047 ± 0.029</td><td><strong>0.472 ± 0.081</strong></td></tr>
+              <tr><td>Weak Superv.</td><td>7.929 ± 1.867</td><td><strong>0.122 ± 0.172</strong></td><td>1.566 ± 1.025</td><td><strong>0.008 ± 0.011</strong></td><td>0.105 ± 0.069</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </section>
 
-    <!-- Rollout gallery -->
+    <!-- ROLLOUTS -->
     <section id="rollouts">
       <h2>Rollouts</h2>
-      <p class="subtitle" style="margin-top:-6px">Filter by task, outcome, and dataset; click any video to watch with audio.</p>
+      <p class="subtitle" style="margin-top:-6px">Filter by task, dataset, and outcome; click to play with audio.</p>
 
       <div id="filters">
         <select data-filter="task">
@@ -283,110 +218,51 @@ Replace TODO: ... markers with your content.
       <div id="rollout-list"></div>
     </section>
 
-    <script>
-    // reuse your data[] or extend it
-    const data = [
-      {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4",
-      thumb:"static/images/lift_ID_ep42.jpg",
-      task:"Lift", setting:"ID", outcome:"Success", model:"Strong", ttFH:3,
-      notes:"Early help stabilized grasp."},
-      {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4",
-      thumb:"static/images/place_Shift_ep07.jpg",
-      task:"Place", setting:"Shift", outcome:"Fail", model:"Weak", ttFH:2,
-      notes:"Late trigger; contact slip."}
-    ];
-
-    const list = document.getElementById('rollout-list');
-    function renderRollouts(){
-      const sels = [...document.querySelectorAll('#filters [data-filter]')];
-      const filtered = data.filter(d => sels.every(sel => {
-        const k = sel.dataset.filter; return !sel.value || d[k] === sel.value;
-      }));
-      list.innerHTML = filtered.map(d => `
-        <div class="rollout">
-          <figure>
-            <video src="${d.src}" poster="${d.thumb}" controls playsinline preload="metadata"></video>
-            <figcaption>
-              ${d.task} • ${d.setting} • ${d.model} • ${d.outcome}
-              <div class="meta">TTFH=${d.ttFH} — ${d.notes || ""}</div>
-            </figcaption>
-          </figure>
-        </div>
-      `).join('');
-    }
-    document.getElementById('filters').addEventListener('change', renderRollouts);
-    renderRollouts();
-    </script>
-
-    <!-- Model Zoo -->
-    <section id="models" class="panel card">
-      <h2>Models</h2>
-      <ul>
-        <li><strong>INSIGHT‑Strong</strong>: step‑label trained; <a href="static/downloads/insight_strong.ckpt">checkpoint</a> • <a href="#">card</a></li>
-        <li><strong>INSIGHT‑Weak</strong>: episode‑label trained (MIL); <a href="static/downloads/insight_weak.ckpt">checkpoint</a> • <a href="#">card</a></li>
-        <li><strong>INSIGHT‑Jumbo</strong>: multi‑dataset; <a href="static/downloads/insight_jumbo.ckpt">checkpoint</a> • <a href="#">card</a></li>
-        <li><strong>Baselines</strong>: CP‑Entropy, CP‑Perplexity configs; <a href="static/downloads/cp_configs.zip">configs</a></li>
-      </ul>
-    </section>
-
-    <!-- Data & Reproducibility -->
-    <section id="data" class="panel card">
-      <h2>Data & Reproducibility</h2>
-      <p>We release a small feature dump (token‑level uncertainty sequences) and scripts to reproduce key figures.</p>
-      <ul>
-        <li><a href="static/downloads/example_features.zip">example_features.zip</a> (small subset)</li>
-        <li><a href="static/downloads/reproduce_figs.zip">reproduce_figs.zip</a> (plot scripts & CSVs)</li>
-        <li><a href="https://github.com/your-org/insight-vla-help-triggers">Code repository</a></li>
-      </ul>
-    </section>
-
-    <!-- BibTeX -->
-    <section id="bibtex" class="panel card">
+    <!-- BibTeX (keep simple for now) -->
+    <section id="bibtex">
       <h2>BibTeX</h2>
-      <pre style="white-space:pre-wrap;background:#0f1421;border:1px solid #1b2435;border-radius:12px;padding:16px;overflow:auto">
+      <pre style="white-space:pre-wrap;background:#f6f8fb;border:1px solid #e6edf3;border-radius:12px;padding:16px;overflow:auto">
 @inproceedings{TODO2026insight,
   title={INSIGHT: Inference-time Sequence Introspection for Help-Triggering in Vision-Language-Action Models},
-  author={TODO},
+  author={Karli, Ulas Berk and Shangguan, Ziyao and Fitzgerald, Tesca},
   booktitle={IEEE International Conference on Robotics and Automation (ICRA)},
   year={2026}
 }
       </pre>
-      <p><a href="static/bibtex.bib">Download .bib</a></p>
     </section>
 
-    <!-- Team -->
-    <section id="team" class="panel card">
+    <section id="team">
       <h2>Team</h2>
-      <p>TODO: Author list with affiliations and links.</p>
+      <p>Ulas Berk Karli (Yale), Ziyao Shangguan (Yale), Tesca Fitzgerald (Yale).</p>
     </section>
-
-    <p class="foot">© 2025 INSIGHT authors. Site based on the Nerfies template. Media under the respective licenses.</p>
   </main>
 
-  <!-- Minimal analytics (optional) -->
-  <!-- <script defer data-domain="insight-vla.github.io" src="https://plausible.io/js/script.js"></script> -->
+  <script>
+    // Simple rollout renderer (flowing list)
+    const data = [
+      {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4", thumb:"static/images/lift_ID_ep42.jpg",
+       task:"Lift", setting:"ID", outcome:"Success", model:"Strong", ttFH:3,
+       notes:"Early help stabilized grasp."},
+      {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4", thumb:"static/images/place_Shift_ep07.jpg",
+       task:"Place", setting:"Shift", outcome:"Fail", model:"Weak", ttFH:2,
+       notes:"Late trigger; contact slip."}
+    ];
+    const list = document.getElementById('rollout-list');
+    function renderRollouts(){
+      const sels=[...document.querySelectorAll('#filters [data-filter]')];
+      const filtered = data.filter(d=>sels.every(sel=>{const k=sel.dataset.filter; return !sel.value || d[k]===sel.value;}));
+      list.innerHTML = filtered.map(d=>`
+        <div class="rollout">
+          <figure>
+            <video src="${d.src}" poster="${d.thumb}" controls playsinline preload="metadata"></video>
+            <figcaption>${d.task} • ${d.setting} • ${d.model} • ${d.outcome}
+              <div class="meta">TTFH=${d.ttFH} — ${d.notes||""}</div>
+            </figcaption>
+          </figure>
+        </div>`).join('');
+    }
+    renderRollouts();
+    document.getElementById('filters').addEventListener('change', renderRollouts);
+  </script>
 </body>
 </html>
-
-<!-- ======= Create /js/rollouts.js with the following starter =======
-// /js/rollouts.js
-const data = [
-  {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4", thumb:"static/images/lift_ID_ep42.jpg", task:"Lift", setting:"ID", outcome:"Success", model:"Strong", ttFH:3, notes:"Early help stabilized grasp."},
-  {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4", thumb:"static/images/place_Shift_ep07.jpg", task:"Place", setting:"Shift", outcome:"Fail", model:"Weak", ttFH:2, notes:"Late trigger; contact slip."}
-];
-
-const grid = document.getElementById('rollout-grid');
-function render(){
-  const sels=[...document.querySelectorAll('#filters [data-filter]')];
-  const filtered = data.filter(d=>sels.every(sel=>{const k=sel.dataset.filter;return !sel.value || d[k]===sel.value;}));
-  grid.innerHTML = filtered.map(d=>`
-    <figure class="tile" data-task="${d.task}" data-setting="${d.setting}" data-outcome="${d.outcome}" data-model="${d.model}">
-      <video src="${d.src}" poster="${d.thumb}" muted loop playsinline></video>
-      <figcaption>${d.task} • ${d.setting} • ${d.model} • TTFH=${d.ttFH}<br/>${d.notes}</figcaption>
-    </figure>`).join('');
-}
-
-document.getElementById('filters').addEventListener('change', render);
-render();
-
-======= End rollouts.js starter ======= -->
