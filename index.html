@@ -90,8 +90,8 @@ Replace TODO: ... markers with your content.
       </div>
       <div class="panel hero-copy">
         <h1>INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs</h1>
-        <p class="subtitle">Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts. <br/>ICRA 2026 Submission.</p>
-        <p class="subtitle" style="margin-top:8px">Authors: <span>TODO: Author Names</span></p>
+        <p class="subtitle">Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts. <!--br/>ICRA 2026 Submission.--> </p>
+        <p class="subtitle" style="margin-top:8px">Authors: <span>Ulas Berk Karli, Ziyao Shangguan, and Tesca Fitzgerald</span></p>
         <div class="badges">
           <a class="btn" href="https://github.com/ulaskarli/insight-vla-help-triggers"><strong>Code</strong></a>
           <!-- a class="btn" href="#models">Models</a -->
@@ -130,23 +130,96 @@ Replace TODO: ... markers with your content.
 
     <!-- Results at a glance -->
     <section id="results" class="panel card">
-      <h2>Results at a glance</h2>
-      <div class="metrics">
-        <div class="metric"><div class="v" id="m_id">TODO</div><div>In‑Distribution F1 (Strong)</div></div>
-        <div class="metric"><div class="v" id="m_shift">TODO</div><div>Shifted Eval F1 (Strong→Weak)</div></div>
-        <div class="metric"><div class="v" id="m_ttfh">TODO</div><div>TTFH ↓ (fail episodes)</div></div>
+      <h2>Results</h2>
+
+      <!-- Quick sub-nav -->
+      <div class="results-nav" style="display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 18px 0">
+        <a class="btn" href="#res-overview">Overview</a>
+        <a class="btn" href="#res-id">In-Distribution</a>
+        <a class="btn" href="#res-ds">Distribution-Shift</a>
+        <a class="btn" href="#res-lid">Large In-Distribution</a>
+        <a class="btn" href="#res-ood">Sim-OOD</a>
+        <a class="btn" href="#res-timing">Help Timing</a>
       </div>
-      <div class="twocol" style="margin-top:20px">
+
+      <!-- 0) Overview (headline numbers) -->
+      <section id="res-overview" style="margin-top:6px">
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Overview</h3>
+        <div class="metrics">
+          <div class="metric"><div class="v" id="m_id">TODO</div><div>In-Distribution F1 (Strong)</div></div>
+          <div class="metric"><div class="v" id="m_shift">TODO</div><div>Shifted Eval F1 (Strong→Weak)</div></div>
+          <div class="metric"><div class="v" id="m_ttfh">TODO</div><div>TTFH ↓ (Fail Episodes)</div></div>
+        </div>
+      </section>
+
+      <!-- 1) In-Distribution -->
+      <section id="res-id" style="margin-top:30px">
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">In-Distribution Performance</h3>
+        <p class="muted">10-fold CV results with mean±std. Boxplots per metric.</p>
         <figure>
-          <img src="static/images/results_boxplots.png" alt="Boxplots: accuracy/precision/recall/F1 across folds"/>
-          <figcaption>Summary across 10‑fold CV for Strong vs Weak vs CP baselines.</figcaption>
+          <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
+          <figcaption>Acc / F1 over 10 folds. Models: Strong, Weak, CP baselines.</figcaption>
         </figure>
+      </section>
+
+      <!-- 2) Distribution Shift -->
+      <section id="res-ds" style="margin-top:30px">
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Distribution Shift Performance</h3>
+        <div class="twocol">
+          <figure>
+            <img src="static/images/OOD.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
+            <figcaption>Strong captures fine-grained uncertainty; Weak competitive when train/eval align.</figcaption>
+          </figure>
+          <div>
+            <ul>
+              <li><strong>Strong</strong>: step-label training → precise help detection.</li>
+              <li><strong>Weak</strong>: episode-label (MIL) → scalable when dense labels are impractical.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3) large in-distribution -->
+      <section id="res-lid" style="margin-top:30px">
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Large In-Distribution Performance</h3>
+        <div class="twocol">
+          <figure>
+            <img src="static/images/LID.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
+            <figcaption>Temporal modeling of token sequences vs static sequence-level scores.</figcaption>
+          </figure>
+          <div>
+            <ul>
+              <li>Highlight gains from temporal modeling.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5) Sim-OOD / Shift -->
+      <section id="res-ood" style="margin-top:30px">
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Simulation-OOD</h3>
         <figure>
-          <img src="static/images/results_ood.png" alt="Bar chart: Sim‑OOD performance"/>
-          <figcaption>Sim‑OOD transfer: help-timing and F1 under distribution shift.</figcaption>
+          <img src="static/images/Sim OOD.svg" alt="Bar chart under simulated OOD settings.">
+          <figcaption>Performance under simulated OOD setup.</figcaption>
         </figure>
-      </div>
-    </section>
+      </section>
+
+      <!-- 4) Timing -->
+      <section id="res-timing" style="margin-top:30px">
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Help Timing & Frequency</h3>
+        <div class="twocol">
+          <figure>
+            <img src="static/images/table.png" alt="TTFH and trigger rates on success/fail episodes.">
+            <figcaption>TTFH (fail) ↓ and Trigger Rate: low on success, higher on fail.</figcaption>
+          </figure>
+          <div>
+            <ul>
+              <li>Report mean TTFH on failing episodes (± CI optional).</li>
+              <li>Trigger rates split by success vs fail.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
     <!-- Rollout gallery -->
     <section id="rollouts" class="panel card">
