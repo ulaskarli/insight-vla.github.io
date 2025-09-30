@@ -1,490 +1,237 @@
-<!DOCTYPE html>
-<html>
+<!--
+INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs
+Website scaffold built on top of nerfies/nerfies.github.io structure.
+This single file is a drop-in replacement for your root index.html.
+If your repo already has extra CSS/JS, keep them; this file uses minimal inline CSS + one small JS (rollouts.js) you’ll add under /js/.
+
+Folders assumed by this page:
+  /static/images/    (teaser.jpg/png, method.svg, thumbs)
+  /static/videos/    (short .mp4/.webm rollouts)
+  /static/paper/     (insight_icra26.pdf)
+  /static/downloads/ (checkpoints, feature dumps, reproduce_figs.zip)
+  /js/rollouts.js    (rollout metadata + filter rendering)
+  /static/bibtex.bib (BibTeX entry)
+
+Replace TODO: ... markers with your content.
+-->
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="description"
-        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
-  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nerfies: Deformable Neural Radiance Fields</title>
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>INSIGHT — Inference-time Sequence Introspection for Help-Triggering in VLAs</title>
+  <meta name="description" content="INSIGHT: token-level uncertainty for timely human help in Vision-Language-Action rollouts."/>
+  <!-- Social cards -->
+  <meta property="og:title" content="INSIGHT — Help-Triggering in VLAs"/>
+  <meta property="og:description" content="Token-level uncertainty → timely human help for safer, more reliable VLA rollouts."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="static/images/teaser.jpg"/>
+  <link rel="icon" href="static/images/favicon.ico"/>
+  <style>
+    :root{
+      --bg:#0b0d12; --panel:#111520; --ink:#e9edf5; --muted:#9aa7bd; --accent:#7ad7ff; --accent2:#8fff9e;
+      --maxw:1100px; --gap:22px; --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
     }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-PYVRSFMDRL');
-  </script>
-
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
-
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/favicon.svg">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+    html,body{background:var(--bg);color:var(--ink);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";}
+    a{color:var(--accent)} a:hover{opacity:.9}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:36px 20px}
+    header.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--gap);align-items:center}
+    .panel{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-copy{padding:28px}
+    h1{font-size:clamp(28px,4vw,44px);margin:.2em 0 .3em}
+    .subtitle{color:var(--muted);font-size:1.05rem;line-height:1.5}
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:12px;background:#192034;border:1px solid #2a3244;color:var(--ink);text-decoration:none}
+    .btn strong{color:var(--accent)}
+    .teaser{overflow:hidden;border-radius:var(--radius)}
+    .teaser video,.teaser img{width:100%;height:auto;display:block}
+    nav{position:sticky;top:0;background:rgba(11,13,18,.85);backdrop-filter:saturate(140%) blur(8px);z-index:20;border-bottom:1px solid #171b26}
+    nav .navwrap{max-width:var(--maxw);margin:0 auto;display:flex;gap:18px;align-items:center;padding:10px 20px}
+    nav a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:10px}
+    nav a:hover{background:#161c28}
+    section{margin-top:42px}
+    section .card{padding:26px}
+    h2{font-size:clamp(22px,3vw,32px);margin:.1em 0 .6em}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+    .metric{padding:18px;border:1px solid #1b2435;border-radius:16px;background:#0f1421}
+    .metric .v{font-weight:700;font-size:22px}
+    figure{margin:0}
+    figcaption{color:var(--muted);font-size:.95rem;margin-top:8px}
+    /* Rollout grid */
+    #filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    #filters select{background:#0f1421;color:var(--ink);border:1px solid #242e44;border-radius:10px;padding:8px}
+    #rollout-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+    .tile{border:1px solid #1b2435;border-radius:14px;overflow:hidden;background:#0f1421}
+    .tile video{display:block;width:100%;height:auto}
+    .tile figcaption{padding:10px}
+    .foot{color:var(--muted);font-size:.9rem;margin-top:40px}
+    @media (max-width:980px){header.hero{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
+  <nav>
+    <div class="navwrap">
+      <a href="#top"><strong>INSIGHT</strong></a>
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#rollouts">Rollouts</a>
+      <a href="#models">Models</a>
+      <a href="#data">Data</a>
+      <a href="#bibtex">BibTeX</a>
+      <a href="#team">Team</a>
+    </div>
+  </nav>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://keunhong.com">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
+  <main id="top" class="wrap">
+    <header class="hero">
+      <div class="panel teaser">
+        <!-- Prefer a short, silent teaser video; include an IMG fallback for first paint -->
+        <video src="static/videos/teaser.mp4" poster="static/images/teaser.jpg" autoplay muted loop playsinline></video>
+      </div>
+      <div class="panel hero-copy">
+        <h1>INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs</h1>
+        <p class="subtitle">Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts. <br/>ICRA 2026 Submission.</p>
+        <p class="subtitle" style="margin-top:8px">Authors: <span>TODO: Author Names</span></p>
+        <div class="badges">
+          <a class="btn" href="https://github.com/ulaskarli/insight-vla-help-triggers"><strong>Code</strong></a>
+          <!-- a class="btn" href="#models">Models</a -->
+          <!-- a class="btn" href="#data">Data</a -->
+          <a class="btn" href="#bibtex">BibTeX</a>
+          <a class="btn" href="https://arxiv.org/abs/TO-BE-ADDED">arXiv</a>
+          <a class="btn" href="mailto:ulasberk.karli@yale.edu">Contact</a>
         </div>
       </div>
-    </div>
+    </header>
 
-  </div>
-</nav>
+    <!-- Abstract -->
+    <section id="abstract" class="panel card">
+      <h2>Abstract</h2>
+      <p>Recent Vision–Language–Action (VLA) models exhibit strong generalization but lack mechanisms to anticipate failures and request timely human help. <strong>INSIGHT</strong> introduces a learning framework that leverages token‑level uncertainty signals to predict when intervention is needed. Built on top of π₀‑FAST, our approach extracts entropy, log‑probability, and Dirichlet‑based estimates of aleatoric and epistemic uncertainty, then trains compact transformer classifiers to map these sequences to help triggers. We study both strong and weak supervision regimes, comparing their effectiveness across in‑distribution and out‑of‑distribution tasks. Strong labels capture fine‑grained uncertainty dynamics for reliable detection, while weak labels, though noisier, remain competitive when training and evaluation align—offering scalability where dense annotation is impractical. Crucially, modeling temporal evolution of token‑level uncertainty yields far greater predictive power than static sequence‑level scores. This work provides the first systematic evaluation of uncertainty‑based introspection in VLAs, paving the way for active learning and real‑time error mitigation through selective human intervention.</p>
+    </section>
 
-
-<section class="hero">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Nerfies: Deformable Neural Radiance Fields</h1>
-          <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="https://keunhong.com">Keunhong Park</a><sup>1</sup>,</span>
-            <span class="author-block">
-              <a href="https://utkarshsinha.com">Utkarsh Sinha</a><sup>2</sup>,</span>
-            <span class="author-block">
-              <a href="https://jonbarron.info">Jonathan T. Barron</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://sofienbouaziz.com">Sofien Bouaziz</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://www.danbgoldman.com">Dan B Goldman</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://homes.cs.washington.edu/~seitz/">Steven M. Seitz</a><sup>1,2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://www.ricardomartinbrualla.com">Ricardo Martin-Brualla</a><sup>2</sup>
-            </span>
-          </div>
-
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>University of Washington,</span>
-            <span class="author-block"><sup>2</sup>Google Research</span>
-          </div>
-
-          <div class="column has-text-centered">
-            <div class="publication-links">
-              <!-- PDF Link. -->
-              <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Video Link. -->
-              <span class="link-block">
-                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
-              </span>
-              <!-- Code Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
-                  </a>
-              </span>
-              <!-- Dataset Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="far fa-images"></i>
-                  </span>
-                  <span>Data</span>
-                  </a>
-            </div>
-
-          </div>
+    <!-- Method -->
+    <section id="method" class="panel card">
+      <h2>Method</h2>
+      <div class="twocol">
+        <figure>
+          <img src="static/images/icra_teaser.svg" alt="Method diagram: token distributions → uncertainty features → transformer → help/no-help"/>
+          <figcaption>INSIGHT consumes token distributions from a VLA (e.g., π₀‑FAST), computes uncertainty features, and predicts help triggers online.</figcaption>
+        </figure>
+        <div>
+          <ul>
+            <li><strong>Inputs:</strong> per-token distributions → features: entropy, −log p, aleatoric (AU) and epistemic (EU) uncertainty.</li>
+            <li><strong>Decision module:</strong> compact transformer over short windows, outputs <em>help/no-help</em> at step <em>t</em>.</li>
+            <li><strong>Training regimes:</strong> <em>Strong</em> (step labels) and <em>Weak</em> (episode labels, MIL-style) + CP baselines for comparison.</li>
+            <li><strong>Deployment:</strong> triggers enable teleop takeover or preference queries; success episodes see fewer interrupts, fails get early warnings.</li>
+          </ul>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
-      </h2>
-    </div>
-  </div>
-</section>
-
-
-<section class="hero is-light is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
+    <!-- Results at a glance -->
+    <section id="results" class="panel card">
+      <h2>Results at a glance</h2>
+      <div class="metrics">
+        <div class="metric"><div class="v" id="m_id">TODO</div><div>In‑Distribution F1 (Strong)</div></div>
+        <div class="metric"><div class="v" id="m_shift">TODO</div><div>Shifted Eval F1 (Strong→Weak)</div></div>
+        <div class="metric"><div class="v" id="m_ttfh">TODO</div><div>TTFH ↓ (fail episodes)</div></div>
       </div>
-    </div>
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
-          </p>
-          <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
-          </p>
-          <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
-          </p>
-        </div>
+      <div class="twocol" style="margin-top:20px">
+        <figure>
+          <img src="static/images/results_boxplots.png" alt="Boxplots: accuracy/precision/recall/F1 across folds"/>
+          <figcaption>Summary across 10‑fold CV for Strong vs Weak vs CP baselines.</figcaption>
+        </figure>
+        <figure>
+          <img src="static/images/results_ood.png" alt="Bar chart: Sim‑OOD performance"/>
+          <figcaption>Sim‑OOD transfer: help-timing and F1 under distribution shift.</figcaption>
+        </figure>
       </div>
-    </div>
-    <!--/ Abstract. -->
+    </section>
 
-    <!-- Paper video. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+    <!-- Rollout gallery -->
+    <section id="rollouts" class="panel card">
+      <h2>Rollout Gallery</h2>
+      <div id="filters">
+        <select data-filter="task"><option value="">All Tasks</option><option>Lift</option><option>Place</option><option>Push</option></select>
+        <select data-filter="setting"><option value="">All Settings</option><option>ID</option><option>Shift</option><option>Sim‑OOD</option></select>
+        <select data-filter="outcome"><option value="">All Outcomes</option><option>Success</option><option>Fail</option></select>
+        <select data-filter="model"><option value="">All Models</option><option>Strong</option><option>Weak</option><option>CP‑E</option><option>CP‑P</option></select>
       </div>
-    </div>
-    <!--/ Paper video. -->
-  </div>
-</section>
+      <div id="rollout-grid"></div>
+      <script src="js/rollouts.js"></script>
+    </section>
 
+    <!-- Model Zoo -->
+    <section id="models" class="panel card">
+      <h2>Models</h2>
+      <ul>
+        <li><strong>INSIGHT‑Strong</strong>: step‑label trained; <a href="static/downloads/insight_strong.ckpt">checkpoint</a> • <a href="#">card</a></li>
+        <li><strong>INSIGHT‑Weak</strong>: episode‑label trained (MIL); <a href="static/downloads/insight_weak.ckpt">checkpoint</a> • <a href="#">card</a></li>
+        <li><strong>INSIGHT‑Jumbo</strong>: multi‑dataset; <a href="static/downloads/insight_jumbo.ckpt">checkpoint</a> • <a href="#">card</a></li>
+        <li><strong>Baselines</strong>: CP‑Entropy, CP‑Perplexity configs; <a href="static/downloads/cp_configs.zip">configs</a></li>
+      </ul>
+    </section>
 
-<section class="section">
-  <div class="container is-max-desktop">
+    <!-- Data & Reproducibility -->
+    <section id="data" class="panel card">
+      <h2>Data & Reproducibility</h2>
+      <p>We release a small feature dump (token‑level uncertainty sequences) and scripts to reproduce key figures.</p>
+      <ul>
+        <li><a href="static/downloads/example_features.zip">example_features.zip</a> (small subset)</li>
+        <li><a href="static/downloads/reproduce_figs.zip">reproduce_figs.zip</a> (plot scripts & CSVs)</li>
+        <li><a href="https://github.com/your-org/insight-vla-help-triggers">Code repository</a></li>
+      </ul>
+    </section>
 
-    <div class="columns is-centered">
+    <!-- BibTeX -->
+    <section id="bibtex" class="panel card">
+      <h2>BibTeX</h2>
+      <pre style="white-space:pre-wrap;background:#0f1421;border:1px solid #1b2435;border-radius:12px;padding:16px;overflow:auto">
+@inproceedings{TODO2026insight,
+  title={INSIGHT: Inference-time Sequence Introspection for Help-Triggering in Vision-Language-Action Models},
+  author={TODO},
+  booktitle={IEEE International Conference on Robotics and Automation (ICRA)},
+  year={2026}
+}
+      </pre>
+      <p><a href="static/bibtex.bib">Download .bib</a></p>
+    </section>
 
-      <!-- Visual Effects. -->
-      <div class="column">
-        <div class="content">
-          <h2 class="title is-3">Visual Effects</h2>
-          <p>
-            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
-            would be impossible without nerfies since it would require going through a wall.
-          </p>
-          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/dollyzoom-stacked.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-      <!--/ Visual Effects. -->
+    <!-- Team -->
+    <section id="team" class="panel card">
+      <h2>Team</h2>
+      <p>TODO: Author list with affiliations and links.</p>
+    </section>
 
-      <!-- Matting. -->
-      <div class="column">
-        <h2 class="title is-3">Matting</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <video id="matting-video" controls playsinline height="100%">
-              <source src="./static/videos/matting.mp4"
-                      type="video/mp4">
-            </video>
-          </div>
+    <p class="foot">© 2025 INSIGHT authors. Site based on the Nerfies template. Media under the respective licenses.</p>
+  </main>
 
-        </div>
-      </div>
-    </div>
-    <!--/ Matting. -->
-
-    <!-- Animation. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
-
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
-        <div class="content has-text-justified">
-          <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
-          </p>
-        </div>
-        <div class="columns is-vcentered interpolation-panel">
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_start.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <p>Start Frame</p>
-          </div>
-          <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper">
-              Loading...
-            </div>
-            <input class="slider is-fullwidth is-large is-info"
-                   id="interpolation-slider"
-                   step="1" min="0" max="100" value="0" type="range">
-          </div>
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_end.jpg"
-                 class="interpolation-image"
-                 alt="Interpolation end reference image."/>
-            <p class="is-bold">End Frame</p>
-          </div>
-        </div>
-        <br/>
-        <!--/ Interpolating. -->
-
-        <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
-        <div class="content has-text-justified">
-          <p>
-            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
-            viewpoint such as a stabilized camera by playing back the training deformations.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <video id="replay-video"
-                 controls
-                 muted
-                 preload
-                 playsinline
-                 width="75%">
-            <source src="./static/videos/replay.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <!--/ Re-rendering. -->
-
-      </div>
-    </div>
-    <!--/ Animation. -->
-
-
-    <!-- Concurrent Work. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Related Links</h2>
-
-        <div class="content has-text-justified">
-          <p>
-            There's a lot of excellent work that was introduced around the same time as ours.
-          </p>
-          <p>
-            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
-          </p>
-          <p>
-            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
-            both use deformation fields to model non-rigid scenes.
-          </p>
-          <p>
-            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
-          </p>
-          <p>
-            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--/ Concurrent Work. -->
-
-  </div>
-</section>
-
-
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{park2021nerfies,
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
-}</code></pre>
-  </div>
-</section>
-
-
-<footer class="footer">
-  <div class="container">
-    <div class="content has-text-centered">
-      <a class="icon-link"
-         href="./static/videos/nerfies_paper.pdf">
-        <i class="fas fa-file-pdf"></i>
-      </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div>
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-          <p>
-            This means you are free to borrow the <a
-              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
-            we just ask that you link back to this page in the footer.
-            Please remember to remove the analytics code included in the header of the website which
-            you do not want on your website.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-
+  <!-- Minimal analytics (optional) -->
+  <!-- <script defer data-domain="insight-vla.github.io" src="https://plausible.io/js/script.js"></script> -->
 </body>
 </html>
+
+<!-- ======= Create /js/rollouts.js with the following starter =======
+// /js/rollouts.js
+const data = [
+  {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4", thumb:"static/images/lift_ID_ep42.jpg", task:"Lift", setting:"ID", outcome:"Success", model:"Strong", ttFH:3, notes:"Early help stabilized grasp."},
+  {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4", thumb:"static/images/place_Shift_ep07.jpg", task:"Place", setting:"Shift", outcome:"Fail", model:"Weak", ttFH:2, notes:"Late trigger; contact slip."}
+];
+
+const grid = document.getElementById('rollout-grid');
+function render(){
+  const sels=[...document.querySelectorAll('#filters [data-filter]')];
+  const filtered = data.filter(d=>sels.every(sel=>{const k=sel.dataset.filter;return !sel.value || d[k]===sel.value;}));
+  grid.innerHTML = filtered.map(d=>`
+    <figure class="tile" data-task="${d.task}" data-setting="${d.setting}" data-outcome="${d.outcome}" data-model="${d.model}">
+      <video src="${d.src}" poster="${d.thumb}" muted loop playsinline></video>
+      <figcaption>${d.task} • ${d.setting} • ${d.model} • TTFH=${d.ttFH}<br/>${d.notes}</figcaption>
+    </figure>`).join('');
+}
+
+document.getElementById('filters').addEventListener('change', render);
+render();
+
+======= End rollouts.js starter ======= -->
