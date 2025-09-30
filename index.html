@@ -64,6 +64,15 @@ Replace TODO: ... markers with your content.
     .tile video{display:block;width:100%;height:auto}
     .tile figcaption{padding:10px}
     .foot{color:var(--muted);font-size:.9rem;margin-top:40px}
+    .table-card{background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:var(--shadow);overflow:auto}
+    .table-card table{width:100%;border-collapse:collapse;min-width:720px}
+    .table-card th,.table-card td{padding:10px 12px;text-align:center;border-bottom:1px solid #eee;white-space:nowrap}
+    .table-card th:first-child,.table-card td:first-child{text-align:left}
+    .table-card thead th{font-weight:700;background:#f3f5f7;color:#333}
+    .table-card tbody tr:hover{background:#fafbfc}
+    .kpi-up{color:#156f00;font-weight:700}     /* ↑ higher is better */
+    .kpi-down{color:#0054a6;font-weight:700}   /* ↓ lower is better */
+    .caption{color:var(--muted);font-size:.95rem;margin-top:8px}
     @media (max-width:980px){header.hero{grid-template-columns:1fr}}
   </style>
 </head>
@@ -152,74 +161,107 @@ Replace TODO: ... markers with your content.
         </div>
       </section>
 
-      <!-- 1) In-Distribution -->
+      <!-- 1) In-Distribution (boxplot) -->
       <section id="res-id" style="margin-top:30px">
         <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">In-Distribution Performance</h3>
-        <p class="muted">10-fold CV results with mean±std. Boxplots per metric.</p>
         <figure>
-          <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
-          <figcaption>Acc / F1 over 10 folds. Models: Strong, Weak, CP baselines.</figcaption>
+          <img src="static/images/ID_sign.jpeg" alt="In-distribution boxplots comparing INSIGHT to CP baselines across folds.">
+          <figcaption>
+            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P).
+            Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds.
+            Error bars indicate 1 standard deviation.
+            Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.
+          </figcaption>
         </figure>
       </section>
 
-      <!-- 2) Distribution Shift -->
+      <!-- 2) Distribution Shift (boxplot) -->
       <section id="res-ds" style="margin-top:30px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Distribution Shift Performance</h3>
-        <div class="twocol">
-          <figure>
-            <img src="static/images/OOD.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
-            <figcaption>Strong captures fine-grained uncertainty; Weak competitive when train/eval align.</figcaption>
-          </figure>
-          <div>
-            <ul>
-              <li><strong>Strong</strong>: step-label training → precise help detection.</li>
-              <li><strong>Weak</strong>: episode-label (MIL) → scalable when dense labels are impractical.</li>
-            </ul>
-          </div>
-        </div>
+        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Distribution-Shift Performance</h3>
+        <figure>
+          <img src="static/images/OOD.jpeg" alt="Distribution-shift boxplots comparing methods across folds.">
+          <figcaption>
+            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P).
+            Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds.
+            Error bars indicate 1 standard deviation.
+            Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.
+          </figcaption>
+        </figure>
       </section>
 
-      <!-- 3) large in-distribution -->
+      <!-- 3) Large In-Distribution (boxplot) -->
       <section id="res-lid" style="margin-top:30px">
         <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Large In-Distribution Performance</h3>
-        <div class="twocol">
-          <figure>
-            <img src="static/images/LID.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
-            <figcaption>Temporal modeling of token sequences vs static sequence-level scores.</figcaption>
-          </figure>
-          <div>
-            <ul>
-              <li>Highlight gains from temporal modeling.</li>
-            </ul>
-          </div>
-        </div>
+        <figure>
+          <img src="static/images/LID.jpeg" alt="Large in-distribution boxplots comparing methods across folds.">
+          <figcaption>
+            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P).
+            Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds.
+            Error bars indicate 1 standard deviation.
+            Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.
+          </figcaption>
+        </figure>
       </section>
 
-      <!-- 5) Sim-OOD / Shift -->
+      <!-- 4) Simulation OOD (bar/plot) -->
       <section id="res-ood" style="margin-top:30px">
         <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Simulation-OOD</h3>
         <figure>
-          <img src="static/images/Sim OOD.svg" alt="Bar chart under simulated OOD settings.">
+          <img src="static/images/Sim_OOD.jpeg" alt="Simulation OOD performance summary.">
           <figcaption>Performance under simulated OOD setup.</figcaption>
         </figure>
       </section>
 
       <!-- 4) Timing -->
       <section id="res-timing" style="margin-top:30px">
-        <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Help Timing & Frequency</h3>
-        <div class="twocol">
-          <figure>
-            <img src="static/images/table.png" alt="TTFH and trigger rates on success/fail episodes.">
-            <figcaption>TTFH (fail) ↓ and Trigger Rate: low on success, higher on fail.</figcaption>
-          </figure>
-          <div>
-            <ul>
-              <li>Report mean TTFH on failing episodes (± CI optional).</li>
-              <li>Trigger rates split by success vs fail.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <h3 style="margin:.4em 0 .6em;font-size:1.2rem;color:#333">Help Timing & Frequency</h3>
+
+      <div class="table-card">
+        <table class="table-metrics">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>TTFH (fail) <span class="kpi-down">↓</span></th>
+              <th>Triggers<sub>succ</sub> <span class="kpi-down">↓</span></th>
+              <th>Triggers<sub>fail</sub> (≥ 1 ok)</th>
+              <th>Trigger Rate (success) <span class="kpi-down">↓</span></th>
+              <th>Trigger Rate (fail) <span class="kpi-up">↑</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CP-W (Entropy)</td>
+              <td>6.891 &plusmn; 2.257</td>
+              <td>0.457 &plusmn; 0.302</td>
+              <td>1.721 &plusmn; 0.739</td>
+              <td>0.031 &plusmn; 0.020</td>
+              <td>0.118 &plusmn; 0.050</td>
+            </tr>
+            <tr>
+              <td><strong>Strong Superv.</strong></td>
+              <td><strong>5.597 &plusmn; 0.809</strong></td>
+              <td>0.710 &plusmn; 0.440</td>
+              <td><strong>7.062 &plusmn; 1.225</strong></td>
+              <td>0.047 &plusmn; 0.029</td>
+              <td><strong>0.472 &plusmn; 0.081</strong></td>
+            </tr>
+            <tr>
+              <td>Weak Superv.</td>
+              <td>7.929 &plusmn; 1.867</td>
+              <td><strong>0.122 &plusmn; 0.172</strong></td>
+              <td>1.566 &plusmn; 1.025</td>
+              <td><strong>0.008 &plusmn; 0.011</strong></td>
+              <td>0.105 &plusmn; 0.069</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="caption">
+        Time-to-first-help (TTFH; lower is better) and trigger statistics by method.
+        As desired, success episodes show lower trigger rates, while failing episodes trigger more frequently and earlier.
+      </p>
+    </section>
 
     <!-- Rollout gallery -->
     <section id="rollouts" class="panel card">
