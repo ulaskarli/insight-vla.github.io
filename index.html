@@ -27,43 +27,46 @@ Replace TODO: ... markers with your content.
   <meta property="og:image" content="static/images/teaser.jpg"/>
   <link rel="icon" href="static/images/favicon.ico"/>
   <style>
+    /* --- layout tone: simple, flowing, no boxes --- */
     :root{
-      --bg:#ffffff; --panel:#f8f9fa; --ink:#1a1a1a; --muted:#555; --accent:#007acc; --accent2:#2ca02c;
-      --maxw:1100px; --gap:22px; --radius:12px; --shadow:0 4px 12px rgba(0,0,0,.1);
+      --bg:#ffffff; --ink:#1a1a1a; --muted:#555; --accent:#007acc;
+      --maxw:1100px; --gap:28px;
     }
     html,body{background:var(--bg);color:var(--ink);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";}
-    a{color:var(--accent)} a:hover{opacity:.85}
     .wrap{max-width:var(--maxw);margin:0 auto;padding:36px 20px}
-    header.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--gap);align-items:center}
-    .panel{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .hero-copy{padding:28px}
-    h1{font-size:clamp(28px,4vw,44px);margin:.2em 0 .3em}
-    .subtitle{color:var(--muted);font-size:1.05rem;line-height:1.5}
-    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:8px;background:#e9ecef;border:1px solid #cfd4da;color:var(--ink);text-decoration:none}
-    .btn strong{color:var(--accent)}
-    .teaser{overflow:hidden;border-radius:var(--radius)}
-    .teaser video,.teaser img{width:100%;height:auto;display:block}
-    nav{position:sticky;top:0;background:#ffffffee;backdrop-filter:saturate(140%) blur(6px);z-index:20;border-bottom:1px solid #ddd}
-    nav .navwrap{max-width:var(--maxw);margin:0 auto;display:flex;gap:18px;align-items:center;padding:10px 20px}
-    nav a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:6px}
-    nav a:hover{background:#f1f3f5}
-    section{margin-top:42px}
-    section .card{padding:26px}
-    h2{font-size:clamp(22px,3vw,32px);margin:.1em 0 .6em}
-    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
-    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
-    .metric{padding:18px;border:1px solid #ddd;border-radius:10px;background:#fff}
-    .metric .v{font-weight:700;font-size:22px;color:var(--accent)}
+    section{margin-top:48px}
+    h1{font-size:clamp(32px,5vw,52px);margin:.2em 0 .1em}
+    h2{font-size:clamp(24px,3.2vw,36px);margin:.2em 0 .4em}
+    .subtitle{color:var(--muted);font-size:1.05rem;line-height:1.6}
+
+    /* remove card/panel look */
+    .panel, .card { background:transparent; box-shadow:none; border:none; }
     figure{margin:0}
     figcaption{color:var(--muted);font-size:.95rem;margin-top:8px}
-    #filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-    #filters select{background:#fff;color:var(--ink);border:1px solid #ccc;border-radius:6px;padding:6px}
-    #rollout-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-    .tile{border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff}
-    .tile video{display:block;width:100%;height:auto}
-    .tile figcaption{padding:10px}
-    .foot{color:var(--muted);font-size:.9rem;margin-top:40px}
+
+    /* hero badges, lighter */
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;background:#eef3f8;border:1px solid #d9e2ec;color:var(--ink);text-decoration:none}
+    .btn strong{color:var(--accent)}
+
+    /* video sections */
+    .fullvideo{position:relative}
+    .fullvideo video{width:100%;height:auto;border-radius:12px}
+    .unmute-tip{position:absolute;right:12px;bottom:12px;background:#0009;color:#fff;padding:6px 10px;border-radius:8px;font-size:.9rem;display:none}
+
+    /* rollouts: simple flow, not cards */
+    #filters{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 16px 0}
+    #filters select{background:#fff;color:var(--ink);border:1px solid #ccc;border-radius:6px;padding:8px}
+    #rollout-list{display:grid;grid-template-columns:1fr;gap:24px}
+    .rollout figure{display:block}
+    .rollout video{width:100%;height:auto;border-radius:10px}
+    .rollout .meta{color:#666;margin:6px 0 0 0}
+
+    nav{position:sticky;top:0;background:#fff;z-index:20;border-bottom:1px solid #eee}
+    nav .navwrap{max-width:var(--maxw);margin:0 auto;display:flex;gap:18px;align-items:center;padding:10px 20px}
+    nav a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:6px}
+    nav a:hover{background:#f6f8fb}
+
     .table-card{background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:var(--shadow);overflow:auto}
     .table-card table{width:100%;border-collapse:collapse;min-width:720px}
     .table-card th,.table-card td{padding:10px 12px;text-align:center;border-bottom:1px solid #eee;white-space:nowrap}
@@ -73,43 +76,37 @@ Replace TODO: ... markers with your content.
     .kpi-up{color:#156f00;font-weight:700}     /* ↑ higher is better */
     .kpi-down{color:#0054a6;font-weight:700}   /* ↓ lower is better */
     .caption{color:var(--muted);font-size:.95rem;margin-top:8px}
-    @media (max-width:980px){header.hero{grid-template-columns:1fr}}
   </style>
 </head>
-<body>
-  <nav>
-    <div class="navwrap">
-      <a href="#top"><strong>INSIGHT</strong></a>
-      <a href="#abstract">Abstract</a>
-      <a href="#method">Method</a>
-      <a href="#results">Results</a>
-      <a href="#rollouts">Rollouts</a>
-      <a href="#models">Models</a>
-      <a href="#data">Data</a>
-      <a href="#bibtex">BibTeX</a>
-      <a href="#team">Team</a>
-    </div>
-  </nav>
+<!-- HEADLINE -->
+<section id="top">
+  <h1>INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs</h1>
+  <p class="subtitle">
+    Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts.
+  </p>
+  <div class="badges">
+    <a class="btn" href="https://github.com/ulaskarli/insight-vla-help-triggers"><strong>Code</strong></a>
+    <a class="btn" href="#bibtex">BibTeX</a>
+    <a class="btn" href="https://arxiv.org/abs/TO-BE-ADDED">arXiv</a>
+    <a class="btn" href="mailto:ulasberk.karli@yale.edu">Contact</a>
+  </div>
+  <p class="subtitle" style="margin-top:10px">Authors: Ulas Berk Karli, Ziyao Shangguan, Tesca Fitzgerald</p>
+</section>
 
-  <main id="top" class="wrap">
-    <header class="hero">
-      <div class="panel teaser">
-        <!-- Prefer a short, silent teaser video; include an IMG fallback for first paint -->
-        <video src="static/videos/icra26_video.mp4" poster="static/images/icra_teaser.svg" autoplay muted loop playsinline></video>
-      </div>
-      <div class="panel hero-copy">
-        <h1>INSIGHT: Inference-time Sequence Introspection for Help-Triggering in VLAs</h1>
-        <p class="subtitle">Token-level uncertainty → timely human help for safer, more reliable Vision–Language–Action rollouts. <!--br/>ICRA 2026 Submission.--> </p>
-        <p class="subtitle" style="margin-top:8px">Authors: <span>Ulas Berk Karli, Ziyao Shangguan, and Tesca Fitzgerald</span></p>
-        <div class="badges">
-          <a class="btn" href="https://github.com/ulaskarli/insight-vla-help-triggers"><strong>Code</strong></a>
-          <!-- a class="btn" href="#models">Models</a -->
-          <!-- a class="btn" href="#data">Data</a -->
-          <a class="btn" href="#bibtex">BibTeX</a>
-          <a class="btn" href="https://arxiv.org/abs/TO-BE-ADDED">arXiv</a>
-          <a class="btn" href="mailto:ulasberk.karli@yale.edu">Contact</a>
-        </div>
-      </div>
+<!-- DEMO VIDEO (with sound) -->
+<section id="demo" class="fullvideo">
+  <!-- Browsers block autoplay with audio. Use controls so sound plays when the user clicks. -->
+  <video src="static/videos/icra26_video.mp4"
+         poster="static/images/icra_teaser.svg"
+         controls playsinline preload="metadata"></video>
+  <div class="unmute-tip" id="unmute-tip">tip: click ▶ to play with sound</div>
+</section>
+
+<script>
+  // show a tiny hint on first load (optional)
+  const tip = document.getElementById('unmute-tip');
+  if (tip) { tip.style.display = 'block'; setTimeout(()=> tip.style.display='none', 3500); }
+</script>
     </header>
 
     <!-- Abstract -->
@@ -264,17 +261,62 @@ Replace TODO: ... markers with your content.
     </section>
 
     <!-- Rollout gallery -->
-    <section id="rollouts" class="panel card">
-      <h2>Rollout Gallery</h2>
+    <section id="rollouts">
+      <h2>Rollouts</h2>
+      <p class="subtitle" style="margin-top:-6px">Filter by task, outcome, and dataset; click any video to watch with audio.</p>
+
       <div id="filters">
-        <select data-filter="task"><option value="">All Tasks</option><option>Lift</option><option>Place</option><option>Push</option></select>
-        <select data-filter="setting"><option value="">All Settings</option><option>ID</option><option>Shift</option><option>Sim‑OOD</option></select>
-        <select data-filter="outcome"><option value="">All Outcomes</option><option>Success</option><option>Fail</option></select>
-        <select data-filter="model"><option value="">All Models</option><option>Strong</option><option>Weak</option><option>CP‑E</option><option>CP‑P</option></select>
+        <select data-filter="task">
+          <option value="">All Tasks</option><option>Lift</option><option>Place</option><option>Push</option>
+        </select>
+        <select data-filter="setting">
+          <option value="">All Datasets</option><option>ID</option><option>Shift</option><option>Sim-OOD</option>
+        </select>
+        <select data-filter="outcome">
+          <option value="">All Outcomes</option><option>Success</option><option>Fail</option>
+        </select>
+        <select data-filter="model">
+          <option value="">All Models</option><option>Strong</option><option>Weak</option><option>CP-E</option><option>CP-P</option>
+        </select>
       </div>
-      <div id="rollout-grid"></div>
-      <script src="js/rollouts.js"></script>
+
+      <div id="rollout-list"></div>
     </section>
+
+    <script>
+    // reuse your data[] or extend it
+    const data = [
+      {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4",
+      thumb:"static/images/lift_ID_ep42.jpg",
+      task:"Lift", setting:"ID", outcome:"Success", model:"Strong", ttFH:3,
+      notes:"Early help stabilized grasp."},
+      {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4",
+      thumb:"static/images/place_Shift_ep07.jpg",
+      task:"Place", setting:"Shift", outcome:"Fail", model:"Weak", ttFH:2,
+      notes:"Late trigger; contact slip."}
+    ];
+
+    const list = document.getElementById('rollout-list');
+    function renderRollouts(){
+      const sels = [...document.querySelectorAll('#filters [data-filter]')];
+      const filtered = data.filter(d => sels.every(sel => {
+        const k = sel.dataset.filter; return !sel.value || d[k] === sel.value;
+      }));
+      list.innerHTML = filtered.map(d => `
+        <div class="rollout">
+          <figure>
+            <video src="${d.src}" poster="${d.thumb}" controls playsinline preload="metadata"></video>
+            <figcaption>
+              ${d.task} • ${d.setting} • ${d.model} • ${d.outcome}
+              <div class="meta">TTFH=${d.ttFH} — ${d.notes || ""}</div>
+            </figcaption>
+          </figure>
+        </div>
+      `).join('');
+    }
+    document.getElementById('filters').addEventListener('change', renderRollouts);
+    renderRollouts();
+    </script>
 
     <!-- Model Zoo -->
     <section id="models" class="panel card">
