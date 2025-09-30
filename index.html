@@ -21,7 +21,6 @@ Replace TODO: ... markers with your content.
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>INSIGHT — Inference-time Sequence Introspection for Help-Triggering in VLAs</title>
   <meta name="description" content="INSIGHT: token-level uncertainty for timely human help in Vision-Language-Action rollouts."/>
-  <!-- Social cards -->
   <meta property="og:title" content="INSIGHT — Help-Triggering in VLAs"/>
   <meta property="og:description" content="Token-level uncertainty → timely human help for safer, more reliable VLA rollouts."/>
   <meta property="og:type" content="website"/>
@@ -29,11 +28,11 @@ Replace TODO: ... markers with your content.
   <link rel="icon" href="static/images/favicon.ico"/>
   <style>
     :root{
-      --bg:#0b0d12; --panel:#111520; --ink:#e9edf5; --muted:#9aa7bd; --accent:#7ad7ff; --accent2:#8fff9e;
-      --maxw:1100px; --gap:22px; --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --bg:#ffffff; --panel:#f8f9fa; --ink:#1a1a1a; --muted:#555; --accent:#007acc; --accent2:#2ca02c;
+      --maxw:1100px; --gap:22px; --radius:12px; --shadow:0 4px 12px rgba(0,0,0,.1);
     }
-    html,body{background:var(--bg);color:var(--ink);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";}
-    a{color:var(--accent)} a:hover{opacity:.9}
+    html,body{background:var(--bg);color:var(--ink);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";}
+    a{color:var(--accent)} a:hover{opacity:.85}
     .wrap{max-width:var(--maxw);margin:0 auto;padding:36px 20px}
     header.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--gap);align-items:center}
     .panel{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow)}
@@ -41,28 +40,27 @@ Replace TODO: ... markers with your content.
     h1{font-size:clamp(28px,4vw,44px);margin:.2em 0 .3em}
     .subtitle{color:var(--muted);font-size:1.05rem;line-height:1.5}
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:12px;background:#192034;border:1px solid #2a3244;color:var(--ink);text-decoration:none}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;background:#e9ecef;border:1px solid #cfd4da;color:var(--ink);text-decoration:none}
     .btn strong{color:var(--accent)}
     .teaser{overflow:hidden;border-radius:var(--radius)}
     .teaser video,.teaser img{width:100%;height:auto;display:block}
-    nav{position:sticky;top:0;background:rgba(11,13,18,.85);backdrop-filter:saturate(140%) blur(8px);z-index:20;border-bottom:1px solid #171b26}
+    nav{position:sticky;top:0;background:#ffffffee;backdrop-filter:saturate(140%) blur(6px);z-index:20;border-bottom:1px solid #ddd}
     nav .navwrap{max-width:var(--maxw);margin:0 auto;display:flex;gap:18px;align-items:center;padding:10px 20px}
-    nav a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:10px}
-    nav a:hover{background:#161c28}
+    nav a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:6px}
+    nav a:hover{background:#f1f3f5}
     section{margin-top:42px}
     section .card{padding:26px}
     h2{font-size:clamp(22px,3vw,32px);margin:.1em 0 .6em}
     .twocol{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
-    .metric{padding:18px;border:1px solid #1b2435;border-radius:16px;background:#0f1421}
-    .metric .v{font-weight:700;font-size:22px}
+    .metric{padding:18px;border:1px solid #ddd;border-radius:10px;background:#fff}
+    .metric .v{font-weight:700;font-size:22px;color:var(--accent)}
     figure{margin:0}
     figcaption{color:var(--muted);font-size:.95rem;margin-top:8px}
-    /* Rollout grid */
     #filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-    #filters select{background:#0f1421;color:var(--ink);border:1px solid #242e44;border-radius:10px;padding:8px}
+    #filters select{background:#fff;color:var(--ink);border:1px solid #ccc;border-radius:6px;padding:6px}
     #rollout-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-    .tile{border:1px solid #1b2435;border-radius:14px;overflow:hidden;background:#0f1421}
+    .tile{border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff}
     .tile video{display:block;width:100%;height:auto}
     .tile figcaption{padding:10px}
     .foot{color:var(--muted);font-size:.9rem;margin-top:40px}
