@@ -35,14 +35,21 @@
         <div class="columns is-centered">
           <div class="column has-text-centered">
             <h1 class="title is-1 publication-title">INSIGHT:<br><span style="font-size:2.4rem;">Inference-time Sequence Introspection for Help-Triggering in VLAs</span></h1>
-            <h2 class="subtitle is-4">ICRA 2026 Submission</h2>
 
             <!-- Authors -->
             <div class="is-size-5 publication-authors">
-              <span class="author-block">Ulas Berk Karli<sup>1</sup>,</span>
-              <span class="author-block">Co-authors TBD<sup>1</sup></span>
-              <br>
-              <span class="author-block"><sup>1</sup>Yale University</span>
+                <span class="author-block">
+                <a href="https://ulaskarli.github.io">Ulas Berk Karli</a><sup>1</sup>,
+                </span>
+                <span class="author-block">Ziyao Shangguan<sup>1</sup>,</span>
+                <span class="author-block">
+                <a href="https://www.tescafitzgerald.com">Tesca Fitzgerald</a><sup>1</sup>
+                </span>
+                <br>
+                <span class="author-block">
+                <sup>1</sup><a href="https://iqr.cs.yale.edu">Inquisitive Robotics Lab</a>,
+                </span>
+                <span class="author-block">Yale University</span>
             </div>
 
             <!-- Links -->
@@ -74,7 +81,7 @@
     <div class="container is-max-desktop has-text-centered">
       <div class="hero-body">
         <video id="teaser" autoplay muted loop playsinline width="80%">
-          <source src="static/videos/teaser.mp4" type="video/mp4">
+          <source src="static/videos/icra26_video.mp4" type="video/mp4">
         </video>
       </div>
     </div>
@@ -89,6 +96,78 @@
       </p>
     </div>
   </section>
+
+  <!-- Rollouts Section with dropdown filters -->
+  <section id="rollouts" class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Rollouts</h2>
+      <div class="field is-grouped is-grouped-multiline" style="margin-bottom:14px">
+        <div class="control">
+          <div class="select is-link is-small">
+            <select id="datasetSel" aria-label="Dataset filter">
+              <option value="">All Datasets</option>
+              <option value="ID">ID</option>
+              <option value="Shift">Shift</option>
+              <option value="Sim-OOD">Sim-OOD</option>
+            </select>
+          </div>
+        </div>
+        <div class="control">
+          <div class="select is-link is-small">
+            <select id="outcomeSel" aria-label="Outcome filter">
+              <option value="">All Outcomes</option>
+              <option value="Success">Success</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div id="rolloutGrid" class="columns is-multiline is-variable is-4"></div>
+
+      <p class="has-text-grey is-size-6" id="rolloutEmpty" style="display:none;margin-top:12px">
+        No rollouts match the selected filters.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    // ===== Rollout data (replace with your real files) =====
+    const ROLLOUTS = [
+      // {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4", thumb:"static/images/lift_ID_ep42.jpg", dataset:"ID", outcome:"Success", caption:"Lift • ID • Success"},
+      // {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4", thumb:"static/images/place_Shift_ep07.jpg", dataset:"Shift", outcome:"Fail", caption:"Place • Shift • Fail"},
+    ];
+
+    // ===== Render & Filter =====
+    const grid = document.getElementById('rolloutGrid');
+    const emptyMsg = document.getElementById('rolloutEmpty');
+    const datasetSel = document.getElementById('datasetSel');
+    const outcomeSel = document.getElementById('outcomeSel');
+
+    function renderRollouts(){
+      const ds = datasetSel.value;
+      const oc = outcomeSel.value;
+      const items = ROLLOUTS.filter(r => (!ds || r.dataset===ds) && (!oc || r.outcome===oc));
+
+      grid.innerHTML = items.map(r => `
+        <div class="column is-6">
+          <figure class="image">
+            <video src="${r.src}" poster="${r.thumb||''}" controls playsinline preload="metadata" style="border-radius:12px;width:100%"></video>
+            <figcaption class="has-text-grey" style="margin-top:6px">${r.caption||`${r.dataset} • ${r.outcome}`}</figcaption>
+          </figure>
+        </div>
+      `).join('');
+
+      emptyMsg.style.display = items.length ? 'none' : 'block';
+    }
+
+    if (datasetSel && outcomeSel && grid){
+      datasetSel.addEventListener('change', renderRollouts);
+      outcomeSel.addEventListener('change', renderRollouts);
+      renderRollouts();
+    }
+  </script>
 
   <!-- Results Section (placeholder for boxplots and tables) -->
   <section class="section">
@@ -175,78 +254,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- Rollouts Section with dropdown filters -->
-  <section id="rollouts" class="section">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3">Rollouts</h2>
-      <div class="field is-grouped is-grouped-multiline" style="margin-bottom:14px">
-        <div class="control">
-          <div class="select is-link is-small">
-            <select id="datasetSel" aria-label="Dataset filter">
-              <option value="">All Datasets</option>
-              <option value="ID">ID</option>
-              <option value="Shift">Shift</option>
-              <option value="Sim-OOD">Sim-OOD</option>
-            </select>
-          </div>
-        </div>
-        <div class="control">
-          <div class="select is-link is-small">
-            <select id="outcomeSel" aria-label="Outcome filter">
-              <option value="">All Outcomes</option>
-              <option value="Success">Success</option>
-              <option value="Fail">Fail</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Grid -->
-      <div id="rolloutGrid" class="columns is-multiline is-variable is-4"></div>
-
-      <p class="has-text-grey is-size-6" id="rolloutEmpty" style="display:none;margin-top:12px">
-        No rollouts match the selected filters.
-      </p>
-    </div>
-  </section>
-
-  <script>
-    // ===== Rollout data (replace with your real files) =====
-    const ROLLOUTS = [
-      // {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4", thumb:"static/images/lift_ID_ep42.jpg", dataset:"ID", outcome:"Success", caption:"Lift • ID • Success"},
-      // {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4", thumb:"static/images/place_Shift_ep07.jpg", dataset:"Shift", outcome:"Fail", caption:"Place • Shift • Fail"},
-    ];
-
-    // ===== Render & Filter =====
-    const grid = document.getElementById('rolloutGrid');
-    const emptyMsg = document.getElementById('rolloutEmpty');
-    const datasetSel = document.getElementById('datasetSel');
-    const outcomeSel = document.getElementById('outcomeSel');
-
-    function renderRollouts(){
-      const ds = datasetSel.value;
-      const oc = outcomeSel.value;
-      const items = ROLLOUTS.filter(r => (!ds || r.dataset===ds) && (!oc || r.outcome===oc));
-
-      grid.innerHTML = items.map(r => `
-        <div class="column is-6">
-          <figure class="image">
-            <video src="${r.src}" poster="${r.thumb||''}" controls playsinline preload="metadata" style="border-radius:12px;width:100%"></video>
-            <figcaption class="has-text-grey" style="margin-top:6px">${r.caption||`${r.dataset} • ${r.outcome}`}</figcaption>
-          </figure>
-        </div>
-      `).join('');
-
-      emptyMsg.style.display = items.length ? 'none' : 'block';
-    }
-
-    if (datasetSel && outcomeSel && grid){
-      datasetSel.addEventListener('change', renderRollouts);
-      outcomeSel.addEventListener('change', renderRollouts);
-      renderRollouts();
-    }
-  </script>
 
 </body>
 </html>
