@@ -1,284 +1,522 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>INSIGHT: Inference-time Sequence Introspection for VLAs</title>
-  <meta name="description" content="INSIGHT: token-level uncertainty for timely human help in Vision-Language-Action rollouts.">
-  <meta property="og:title" content="INSIGHT — Help-Triggering in VLAs">
-  <meta property="og:description" content="Token-level uncertainty → timely human help for safer, more reliable VLA rollouts.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="static/images/teaser.jpg">
-  <link rel="icon" href="static/images/favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>INSIGHT: Inference-time Sequence Introspection for VLAs</title>
+    <meta name="description"
+        content="INSIGHT: token-level uncertainty for timely human help in Vision-Language-Action rollouts.">
+    <meta property="og:title" content="INSIGHT — Help-Triggering in VLAs">
+    <meta property="og:description"
+        content="Token-level uncertainty → timely human help for safer, more reliable VLA rollouts.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="static/images/teaser.jpg">
+    <link rel="icon" href="static/images/favicon.ico">
 
-  <!-- Fonts and CSS -->
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
+    <!-- Fonts and CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
 
-  <!-- Scripts -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+
+
+    <style>
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-size: .8rem;
+            color: #6b7280;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border: 1px solid #d9e2ec;
+            border-radius: 999px;
+            font-size: .8rem;
+            color: #374151;
+            background: #f6f8fb;
+            margin-right: 6px
+        }
+
+        .soft {
+            background: #f9fafb;
+            border: 1px solid #edf2f7;
+            border-radius: 12px;
+            padding: 16px
+        }
+
+        .twocol {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px
+        }
+
+        @media(min-width:980px) {
+            .twocol {
+                grid-template-columns: 1.15fr .85fr
+            }
+        }
+
+        .cap {
+            color: #6b7280;
+            font-size: .95rem;
+            margin-top: 6px
+        }
+
+        .list-tight li {
+            margin: 6px 0
+        }
+    </style>
+
 </head>
+
 <body>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">INSIGHT:<br><span style="font-size:2.4rem;">Inference-time Sequence Introspection for Help-Triggering in VLAs</span></h1>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title">INSIGHT:<br><span
+                                style="font-size:2.4rem;">Inference-time Sequence Introspection for Help-Triggering in
+                                VLAs</span></h1>
 
-            <!-- Authors -->
-            <div class="is-size-5 publication-authors">
-                <span class="author-block">
-                <a href="https://ulaskarli.github.io">Ulas Berk Karli</a><sup>1</sup>,
-                </span>
-                <span class="author-block">Ziyao Shangguan<sup>1</sup>,</span>
-                <span class="author-block">
-                <a href="https://www.tescafitzgerald.com">Tesca Fitzgerald</a><sup>1</sup>
-                </span>
-                <br>
-                <span class="author-block">
-                <sup>1</sup><a href="https://iqr.cs.yale.edu">Inquisitive Robotics Lab</a>,
-                </span>
-                <span class="author-block">Yale University</span>
+                        <!-- Authors -->
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a href="https://ulaskarli.github.io">Ulas Berk Karli</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">Ziyao Shangguan<sup>1</sup>,</span>
+                            <span class="author-block">
+                                <a href="https://www.tescafitzgerald.com">Tesca Fitzgerald</a><sup>1</sup>
+                            </span>
+                            <br>
+                            <span class="author-block">
+                                <sup>1</sup><a href="https://iqr.cs.yale.edu">Inquisitive Robotics Lab</a>,
+                            </span>
+                            <span class="author-block">Yale University</span>
+                        </div>
+
+                        <!-- Links -->
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="static/paper.pdf"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                                        <span>Paper</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://github.com/ulaskarli/insight-vla-help-triggers"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fab fa-github"></i></span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teaser Video -->
+    <section class="hero teaser teaser-video">
+        <div class="container is-max-desktop has-text-centered">
+            <div class="hero-body">
+                <video id="teaser" autoplay muted loop playsinline width="80%">
+                    <source src="static/videos/icra26_video.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Abstract Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Abstract</h2>
+            <p class="content has-text-justified">
+                Recent Vision-Language-Action (VLA) models show strong generalization capabilities, yet they lack
+                introspective mechanisms for anticipating failures and requesting help from a human supervisor. We
+                present <b>INSIGHT</b>, a learning framework for leveraging token-level uncertainty signals to predict
+                when a VLA should request help. Using π₀-FAST as the underlying model, we extract per-token
+                <i>entropy</i>, <i>log-probability</i>, and Dirichlet-based estimates of <i>aleatoric and epistemic
+                    uncertainty</i>, and train compact transformer classifiers to map these sequences to help triggers.
+                We explore supervision regimes for strong or weak supervision, and extensively compare them across
+                in-distribution and out-of-distribution tasks. Our results show a trade-off: strong labels enable models
+                to capture fine-grained uncertainty dynamics for reliable help detection, while weak labels, though
+                noisier, still support competitive introspection when training and evaluation are aligned, offering a
+                scalable path when dense annotation is impractical. Crucially, we find that modeling the temporal
+                evolution of token-level uncertainty signals with transformers provides far greater predictive power
+                than static sequence-level scores. This study provides the first systematic evaluation of
+                uncertainty-based introspection in VLAs, opening future avenues for active learning and for real-time
+                error mitigation through selective human intervention.
+            </p>
+        </div>
+    </section>
+
+    <!-- episode vs step vs token -->
+    <section id="granularity" class="section">
+        <div class="container is-max-desktop">
+            <div class="eyebrow">Granularity of signals</div>
+            <h2 class="title is-3">Episode vs Step vs Token</h2>
+
+            <div class="twocol">
+                <figure>
+                    <!-- Use your figure from the paper -->
+                    <img src="static/images/level_decomposition.svg"
+                        alt="Episode, Step, Token levels and where uncertainty lives.">
+                    <figcaption class="cap">INSIGHT taps uncertainty <em>at the token level</em> from the VLA decoder,
+                        then reasons over short temporal windows to trigger help.</figcaption>
+                </figure>
+
+                <div class="content">
+                    <p><span class="pill">Episode</span> One rollout end-to-end (success/fail). Labels are sparse and
+                        miss intra-episode dynamics.</p>
+                    <p><span class="pill">Step</span> Per-time-step supervision captures <em>when</em> to ask for help
+                        but ignores sub-token ambiguity.</p>
+                    <p><span class="pill">Token</span> Per-token distributions expose fine-grained uncertainty (entropy,
+                        −log p, Dirichlet AU/EU) that shift before step outcomes.</p>
+                    <div class="soft">
+                        <strong>Key idea:</strong> model the <em>temporal evolution</em> of token-level uncertainty with
+                        a compact transformer → earlier and more reliable help triggers.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supervison labels -->
+    <section id="labels" class="section">
+        <div class="container is-max-desktop">
+            <div class="eyebrow">Supervision</div>
+            <h2 class="title is-3">Strong vs Weak Labels</h2>
+
+            <div class="columns is-variable is-6">
+                <div class="column">
+                    <h3 class="title is-5">Strong (step labels)</h3>
+                    <p>Dense, per-step “help/no-help” supervision. Captures the onset and decay of uncertainty around
+                        challenging events.</p>
+                    <figure>
+                        <img src="static/images/strong_super.gif" alt="Strong label example GIF">
+                        <figcaption class="cap">Each step in an episode is labeled as needing help or not</figcaption>
+                    </figure>
+                    <ul class="list-tight">
+                        <li>Pros: precise timing, best early detection.</li>
+                        <li>Cons: costly to annotate densely.</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3 class="title is-5">Weak (episode labels / MIL)</h3>
+                    <p>Only episode-level success/fail. We use multiple-instance learning to supervise the token-window
+                        classifier.</p>
+                    <figure>
+                        <img src="static/images/weak_superv.gif" alt="Weak label example GIF">
+                        <figcaption class="cap">Each episode is labeled as success or failure</figcaption>
+                    </figure>
+                    <ul class="list-tight">
+                        <li>Pros: scalable, easy to collect.</li>
+                        <li>Cons: noisier; best when train/eval granularity aligns.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transformer -->
+    <section id="models" class="section">
+        <div class="container is-max-desktop">
+            <div class="eyebrow">Modeling</div>
+            <h2 class="title is-3">Training Compact Transformers for Introspection</h2>
+
+            <div class="twocol">
+                <div>
+                    <ul class="list-tight">
+                        <li><strong>Inputs:</strong> token-level features per step: entropy, −log p, Dirichlet AU/EU.
+                        </li>
+                        <li><strong>Windows:</strong> short temporal windows (e.g., 32–64 steps) with overlap.</li>
+                        <li><strong>Backbone:</strong> 2–4 layers, small hidden size; positional encodings for time.
+                        </li>
+                        <li><strong>Objective:</strong> predict <em>help/no-help</em> for the window’s end step.</li>
+                        <li><strong>Calibration:</strong> threshold via held-out set; compare to CP baselines (CP-E,
+                            CP-P).</li>
+                    </ul>
+                    <div class="soft">
+                        <strong>Why small?</strong> Token features are informative—the introspector can stay
+                        <em>compact</em> for fast, online triggering.
+                    </div>
+                </div>
+                <figure>
+                    <img src="static/images/model_mini_transformer.svg" alt="Compact transformer diagram">
+                    <figcaption class="cap">A lightweight transformer over uncertainty sequences outperforms static
+                        sequence scores.</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!--Datasets-->
+    <section id="datasets" class="section">
+        <div class="container is-max-desktop">
+            <div class="eyebrow">Datasets</div>
+            <h2 class="title is-3">Evaluation Settings</h2>
+
+            <div class="content">
+                <p>We evaluate across three settings to probe generalization and robustness:</p>
+                <ul class="list-tight">
+                    <li><span class="pill">ID</span> In-Distribution tasks matching training distribution.</li>
+                    <li><span class="pill">Shift</span> Real-world distribution shift (scenes/objects/placements).</li>
+                    <li><span class="pill">Sim-OOD</span> Simulation OOD tasks (e.g., LIBERO-10 variants).</li>
+                </ul>
             </div>
 
-            <!-- Links -->
-            <div class="column has-text-centered">
-              <div class="publication-links">
-                <span class="link-block">
-                  <a href="static/paper.pdf" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                    <span>Paper</span>
-                  </a>
-                </span>
-                <span class="link-block">
-                  <a href="https://github.com/ulaskarli/insight-vla-help-triggers" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon"><i class="fab fa-github"></i></span>
-                    <span>Code</span>
-                  </a>
-                </span>
-              </div>
+            <div class="soft">
+                <div class="columns is-multiline is-variable is-4">
+                    <div class="column is-4">
+                        <h3 class="title is-6">ID</h3>
+                        <p class="is-size-6">Lift/Place/Pour variants with standard backgrounds; short-horizon actions.
+                        </p>
+                    </div>
+                    <div class="column is-4">
+                        <h3 class="title is-6">Shift</h3>
+                        <p class="is-size-6">New distractors, layouts, and lighting; robustness to visual/motion
+                            changes.</p>
+                    </div>
+                    <div class="column is-4">
+                        <h3 class="title is-6">Sim-OOD</h3>
+                        <p class="is-size-6">LIBERO-10 multi-step instructions; synthetic mismatch vs real dynamics.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rollouts Section with dropdown filters -->
+    <section id="rollouts" class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Rollouts</h2>
+            <div class="field is-grouped is-grouped-multiline" style="margin-bottom:14px">
+                <div class="control">
+                    <div class="select is-link is-small">
+                        <select id="datasetSel" aria-label="Dataset filter">
+                            <option value="">All Datasets</option>
+                            <option value="ID">ID</option>
+                            <option value="Shift">Shift</option>
+                            <option value="Sim-OOD">Sim-OOD</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="select is-link is-small">
+                        <select id="outcomeSel" aria-label="Outcome filter">
+                            <option value="">All Outcomes</option>
+                            <option value="Success">Success</option>
+                            <option value="Fail">Fail</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-          </div>
+            <!-- Grid -->
+            <div id="rolloutGrid" class="columns is-multiline is-variable is-4"></div>
+
+            <p class="has-text-grey is-size-6" id="rolloutEmpty" style="display:none;margin-top:12px">
+                No rollouts match the selected filters.
+            </p>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Teaser Video -->
-  <section class="hero teaser teaser-video">
-    <div class="container is-max-desktop has-text-centered">
-      <div class="hero-body">
-        <video id="teaser" autoplay muted loop playsinline width="80%">
-          <source src="static/videos/icra26_video.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-  </section>
+    <script>
+        // ===== Rollout data (replace with your real files) =====
+        const ROLLOUTS = [
+            // ID
+            { src: "static/videos/l_c_19_S.mp4", thumb: "static/videos/l_c_19_S.mp4", dataset: "ID", outcome: "Success", caption: "Lift the Corn • ID • Success" },
+            { src: "static/videos/l_c_20_F.mp4", thumb: "static/videos/l_c_20_F.mp4", dataset: "ID", outcome: "Fail", caption: "Lift the Corn • ID • Fail" },
+            { src: "static/videos/p_p_s_11_S.mp4", thumb: "static/videos/p_p_s_11_S.mp4", dataset: "ID", outcome: "Success", caption: "Put the Pot in the Sink • ID • Success" },
+            { src: "static/videos/p_p_s_16_F.mp4", thumb: "static/videos/p_p_s_16_F.mp4", dataset: "ID", outcome: "Fail", caption: "Put the Pot in the Sink • ID • Fail" },
+            { src: "static/videos/p_c_p_9_S.mp4", thumb: "static/videos/p_c_p_9_S.mp4", dataset: "ID", outcome: "Success", caption: "Put the Corn in the Pot • ID • Success" },
+            { src: "static/videos/p_c_p_13_F.mp4", thumb: "static/videos/p_c_p_13_F.mp4", dataset: "ID", outcome: "Fail", caption: "Put the Corn in the Pot • ID • Fail" },
+            { src: "static/videos/l_e_9_S.mp4", thumb: "static/videos/l_e_9_S.mp4", dataset: "ID", outcome: "Success", caption: "Lift the Eggplant • ID • Success" },
+            { src: "static/videos/l_e_15_F.mp4", thumb: "static/videos/l_e_15_F.mp4", dataset: "ID", outcome: "Fail", caption: "Lift the Eggplant • ID • Fail" },
+            // Shift
+            { src: "static/videos/l_c_135_S.mp4", thumb: "static/videos/l_c_135_S.mp4", dataset: "Shift", outcome: "Success", caption: "Lift the Corn • Distribution Shift • Success" },
+            { src: "static/videos/l_c_151_F.mp4", thumb: "static/videos/l_c_151_F.mp4", dataset: "Shift", outcome: "Fail", caption: "Lift the Corn • Distribution Shift • Fail" },
+            { src: "static/videos/p_p_s_82_S.mp4", thumb: "static/videos/p_p_s_82_S.mp4", dataset: "Shift", outcome: "Success", caption: "Put the Pot in the Sink • Distribution Shift • Success" },
+            { src: "static/videos/p_p_s_90_F.mp4", thumb: "static/videos/p_p_s_90_F.mp4", dataset: "Shift", outcome: "Fail", caption: "Put the Pot in the Sink • Distribution Shift • Fail" },
+            { src: "static/videos/p_c_p_52_S.mp4", thumb: "static/videos/p_c_p_52_S.mp4", dataset: "Shift", outcome: "Success", caption: "Put the Corn in the Pot • Distribution Shift • Success" },
+            { src: "static/videos/p_c_p_62_F.mp4", thumb: "static/videos/p_c_p_62_F.mp4", dataset: "Shift", outcome: "Fail", caption: "Put the Corn in the Pot • Distribution Shift • Fail" },
+            { src: "static/videos/l_e_84_S.mp4", thumb: "static/videos/l_e_84_S.mp4", dataset: "Shift", outcome: "Success", caption: "Lift the Eggplant • Distribution Shift • Success" },
+            { src: "static/videos/l_e_75_F.mp4", thumb: "static/videos/l_e_75_F.mp4", dataset: "Shift", outcome: "Fail", caption: "Lift the Eggplant • Distribution Shift • Fail" },
+            // Sim-OOD
+            { src: "static/videos/10_4_30_S.mp4", thumb: "static/videos/10_4_30_S.mp4", dataset: "Sim-OOD", outcome: "Success", caption: "Libero 10 Task 4 • Sim-OOD • Success" },
+            { src: "static/videos/10_4_38_F.mp4", thumb: "static/videos/10_4_38_F.mp4", dataset: "Sim-OOD", outcome: "Fail", caption: "Libero 10 Task 4 • Sim-OOD • Fail" },
+            { src: "static/videos/10_5_16_S.mp4", thumb: "static/videos/10_5_16_S.mp4", dataset: "Sim-OOD", outcome: "Success", caption: "Libero 10 Task 5 • Sim-OOD • Success" },
+            { src: "static/videos/10_5_11_F.mp4", thumb: "static/videos/10_5_11_F.mp4", dataset: "Sim-OOD", outcome: "Fail", caption: "Libero 10 Task 5 • Sim-OOD • Fail" },
+            { src: "static/videos/10_7_18_S.mp4", thumb: "static/videos/10_7_18_S.mp4", dataset: "Sim-OOD", outcome: "Success", caption: "Libero 10 Task 7 • Sim-OOD • Success" },
+            { src: "static/videos/10_7_5_F.mp4", thumb: "static/videos/10_7_5_F.mp4", dataset: "Sim-OOD", outcome: "Fail", caption: "Libero 10 Task 7 • Sim-OOD • Fail" },
+            { src: "static/videos/10_9_17_S.mp4", thumb: "static/videos/10_9_17_S.mp4", dataset: "Sim-OOD", outcome: "Success", caption: "Libero 10 Task 9 • Sim-OOD • Success" },
+            { src: "static/videos/10_9_8_F.mp4", thumb: "static/videos/10_9_8_F.mp4", dataset: "Sim-OOD", outcome: "Fail", caption: "Libero 10 Task 9 • Sim-OOD • Fail" },
+        ];
 
-  <!-- Abstract Section -->
-  <section class="section">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3">Abstract</h2>
-      <p class="content has-text-justified">
-        Recent Vision-Language-Action (VLA) models show strong generalization capabilities, yet they lack introspective mechanisms for anticipating failures and requesting help from a human supervisor. We present <b>INSIGHT</b>, a learning framework for leveraging token-level uncertainty signals to predict when a VLA should request help. Using π₀-FAST as the underlying model, we extract per-token <i>entropy</i>, <i>log-probability</i>, and Dirichlet-based estimates of <i>aleatoric and epistemic uncertainty</i>, and train compact transformer classifiers to map these sequences to help triggers. We explore supervision regimes for strong or weak supervision, and extensively compare them across in-distribution and out-of-distribution tasks. Our results show a trade-off: strong labels enable models to capture fine-grained uncertainty dynamics for reliable help detection, while weak labels, though noisier, still support competitive introspection when training and evaluation are aligned, offering a scalable path when dense annotation is impractical. Crucially, we find that modeling the temporal evolution of token-level uncertainty signals with transformers provides far greater predictive power than static sequence-level scores. This study provides the first systematic evaluation of uncertainty-based introspection in VLAs, opening future avenues for active learning and for real-time error mitigation through selective human intervention.
-      </p>
-    </div>
-  </section>
+        // ===== Render & Filter =====
+        const grid = document.getElementById('rolloutGrid');
+        const emptyMsg = document.getElementById('rolloutEmpty');
+        const datasetSel = document.getElementById('datasetSel');
+        const outcomeSel = document.getElementById('outcomeSel');
 
-  <!-- Rollouts Section with dropdown filters -->
-  <section id="rollouts" class="section">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3">Rollouts</h2>
-      <div class="field is-grouped is-grouped-multiline" style="margin-bottom:14px">
-        <div class="control">
-          <div class="select is-link is-small">
-            <select id="datasetSel" aria-label="Dataset filter">
-              <option value="">All Datasets</option>
-              <option value="ID">ID</option>
-              <option value="Shift">Shift</option>
-              <option value="Sim-OOD">Sim-OOD</option>
-            </select>
-          </div>
-        </div>
-        <div class="control">
-          <div class="select is-link is-small">
-            <select id="outcomeSel" aria-label="Outcome filter">
-              <option value="">All Outcomes</option>
-              <option value="Success">Success</option>
-              <option value="Fail">Fail</option>
-            </select>
-          </div>
-        </div>
-      </div>
+        function renderRollouts() {
+            const ds = datasetSel.value;
+            const oc = outcomeSel.value;
+            const items = ROLLOUTS.filter(r => (!ds || r.dataset === ds) && (!oc || r.outcome === oc));
 
-      <!-- Grid -->
-      <div id="rolloutGrid" class="columns is-multiline is-variable is-4"></div>
-
-      <p class="has-text-grey is-size-6" id="rolloutEmpty" style="display:none;margin-top:12px">
-        No rollouts match the selected filters.
-      </p>
-    </div>
-  </section>
-
-  <script>
-    // ===== Rollout data (replace with your real files) =====
-    const ROLLOUTS = [
-      // ID
-      {src:"static/videos/l_c_19_S.mp4", thumb:"static/videos/l_c_19_S.mp4", dataset:"ID", outcome:"Success", caption:"Lift the Corn • ID • Success"},
-      {src:"static/videos/l_c_20_F.mp4", thumb:"static/videos/l_c_20_F.mp4", dataset:"ID", outcome:"Fail", caption:"Lift the Corn • ID • Fail"},
-      {src:"static/videos/p_p_s_11_S.mp4", thumb:"static/videos/p_p_s_11_S.mp4", dataset:"ID", outcome:"Success", caption:"Put the Pot in the Sink • ID • Success"},
-      {src:"static/videos/p_p_s_16_F.mp4", thumb:"static/videos/p_p_s_16_F.mp4", dataset:"ID", outcome:"Fail", caption:"Put the Pot in the Sink • ID • Fail"},
-      {src:"static/videos/p_c_p_9_S.mp4", thumb:"static/videos/p_c_p_9_S.mp4", dataset:"ID", outcome:"Success", caption:"Put the Corn in the Pot • ID • Success"},
-      {src:"static/videos/p_c_p_13_F.mp4", thumb:"static/videos/p_c_p_13_F.mp4", dataset:"ID", outcome:"Fail", caption:"Put the Corn in the Pot • ID • Fail"},
-      {src:"static/videos/l_e_9_S.mp4", thumb:"static/videos/l_e_9_S.mp4", dataset:"ID", outcome:"Success", caption:"Lift the Eggplant • ID • Success"},
-      {src:"static/videos/l_e_15_F.mp4", thumb:"static/videos/l_e_15_F.mp4", dataset:"ID", outcome:"Fail", caption:"Lift the Eggplant • ID • Fail"},
-      // Shift
-      {src:"static/videos/l_c_135_S.mp4", thumb:"static/videos/l_c_135_S.mp4", dataset:"Shift", outcome:"Success", caption:"Lift the Corn • Distribution Shift • Success"},
-      {src:"static/videos/l_c_151_F.mp4", thumb:"static/videos/l_c_151_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Lift the Corn • Distribution Shift • Fail"},
-      {src:"static/videos/p_p_s_82_S.mp4", thumb:"static/videos/p_p_s_82_S.mp4", dataset:"Shift", outcome:"Success", caption:"Put the Pot in the Sink • Distribution Shift • Success"},
-      {src:"static/videos/p_p_s_90_F.mp4", thumb:"static/videos/p_p_s_90_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Put the Pot in the Sink • Distribution Shift • Fail"},
-      {src:"static/videos/p_c_p_52_S.mp4", thumb:"static/videos/p_c_p_52_S.mp4", dataset:"Shift", outcome:"Success", caption:"Put the Corn in the Pot • Distribution Shift • Success"},
-      {src:"static/videos/p_c_p_62_F.mp4", thumb:"static/videos/p_c_p_62_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Put the Corn in the Pot • Distribution Shift • Fail"},
-      {src:"static/videos/l_e_84_S.mp4", thumb:"static/videos/l_e_84_S.mp4", dataset:"Shift", outcome:"Success", caption:"Lift the Eggplant • Distribution Shift • Success"},
-      {src:"static/videos/l_e_75_F.mp4", thumb:"static/videos/l_e_75_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Lift the Eggplant • Distribution Shift • Fail"},
-      // Sim-OOD
-      {src:"static/videos/10_4_30_S.mp4", thumb:"static/videos/10_4_30_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 4 • Sim-OOD • Success"},
-      {src:"static/videos/10_4_38_F.mp4", thumb:"static/videos/10_4_38_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 4 • Sim-OOD • Fail"},
-      {src:"static/videos/10_5_16_S.mp4", thumb:"static/videos/10_5_16_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 5 • Sim-OOD • Success"},
-      {src:"static/videos/10_5_11_F.mp4", thumb:"static/videos/10_5_11_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 5 • Sim-OOD • Fail"},
-      {src:"static/videos/10_7_18_S.mp4", thumb:"static/videos/10_7_18_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 7 • Sim-OOD • Success"},
-      {src:"static/videos/10_7_5_F.mp4", thumb:"static/videos/10_7_5_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 7 • Sim-OOD • Fail"},
-      {src:"static/videos/10_9_17_S.mp4", thumb:"static/videos/10_9_17_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 9 • Sim-OOD • Success"},
-      {src:"static/videos/10_9_8_F.mp4", thumb:"static/videos/10_9_8_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 9 • Sim-OOD • Fail"},
-    ];
-
-    // ===== Render & Filter =====
-    const grid = document.getElementById('rolloutGrid');
-    const emptyMsg = document.getElementById('rolloutEmpty');
-    const datasetSel = document.getElementById('datasetSel');
-    const outcomeSel = document.getElementById('outcomeSel');
-
-    function renderRollouts(){
-      const ds = datasetSel.value;
-      const oc = outcomeSel.value;
-      const items = ROLLOUTS.filter(r => (!ds || r.dataset===ds) && (!oc || r.outcome===oc));
-
-      grid.innerHTML = items.map(r => `
+            grid.innerHTML = items.map(r => `
         <div class="column is-6">
           <figure class="image">
-            <video src="${r.src}" poster="${r.thumb||''}" controls playsinline preload="metadata" style="border-radius:12px;width:100%"></video>
-            <figcaption class="has-text-grey" style="margin-top:6px">${r.caption||`${r.dataset} • ${r.outcome}`}</figcaption>
+            <video src="${r.src}" poster="${r.thumb || ''}" controls playsinline preload="metadata" style="border-radius:12px;width:100%"></video>
+            <figcaption class="has-text-grey" style="margin-top:6px">${r.caption || `${r.dataset} • ${r.outcome}`}</figcaption>
           </figure>
         </div>
       `).join('');
 
-      emptyMsg.style.display = items.length ? 'none' : 'block';
-    }
+            emptyMsg.style.display = items.length ? 'none' : 'block';
+        }
 
-    if (datasetSel && outcomeSel && grid){
-      datasetSel.addEventListener('change', renderRollouts);
-      outcomeSel.addEventListener('change', renderRollouts);
-      renderRollouts();
-    }
-  </script>
+        if (datasetSel && outcomeSel && grid) {
+            datasetSel.addEventListener('change', renderRollouts);
+            outcomeSel.addEventListener('change', renderRollouts);
+            renderRollouts();
+        }
+    </script>
 
-  <!-- Results Section (placeholder for boxplots and tables) -->
-  <section class="section">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3">Results</h2>
+    <!-- Results Section (placeholder for boxplots and tables) -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Results</h2>
 
-      <h3 class="title is-4">In-Distribution Performance</h3>
-      <figure>
-        <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
-        <figcaption>Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P). Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds. Error bars indicate 1 standard deviation. Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.</figcaption>
-      </figure>
+            <h3 class="title is-4">In-Distribution Performance</h3>
+            <figure>
+                <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
+                <figcaption>Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and
+                    perplexity (CP-P). Each box plot indicates mean (dashed horizontal lines) and median (solid
+                    horizontal lines) performance across folds. Error bars indicate 1 standard deviation. Significance
+                    by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.</figcaption>
+            </figure>
 
-      <h3 class="title is-4">Distribution Shift Performance</h3>
-      <figure>
-        <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
-        <figcaption>Performance under distribution shift. Strong supervision captures fine-grained uncertainty; Weak supervision competitive when train/eval align.</figcaption>
-      </figure>
+            <h3 class="title is-4">Distribution Shift Performance</h3>
+            <figure>
+                <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
+                <figcaption>Performance under distribution shift. Strong supervision captures fine-grained uncertainty;
+                    Weak supervision competitive when train/eval align.</figcaption>
+            </figure>
 
-      <h3 class="title is-4">Large In-Distribution Performance</h3>
-      <figure>
-        <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
-        <figcaption>Temporal modeling of token sequences vs static sequence-level scores.</figcaption>
-      </figure>
+            <h3 class="title is-4">Large In-Distribution Performance</h3>
+            <figure>
+                <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
+                <figcaption>Temporal modeling of token sequences vs static sequence-level scores.</figcaption>
+            </figure>
 
-      <h3 class="title is-4">Simulation OOD</h3>
-      <figure>
-        <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
-        <figcaption>Performance under simulated OOD setup.</figcaption>
-      </figure>
+            <h3 class="title is-4">Simulation OOD</h3>
+            <figure>
+                <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
+                <figcaption>Performance under simulated OOD setup.</figcaption>
+            </figure>
 
-      <h3 class="title is-4">Help Timing & Frequency</h3>
-      <div class="table-card">
-        <table class="table is-bordered is-striped is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>Method</th>
-              <th>TTFH (fail) ↓</th>
-              <th>Triggers<sub>succ</sub> ↓</th>
-              <th>Triggers<sub>fail</sub> (≥ 1 ok)</th>
-              <th>Trigger Rate (success) ↓</th>
-              <th>Trigger Rate (fail) ↑</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>CP-W (Entropy)</td>
-              <td>6.891 ± 2.257</td>
-              <td>0.457 ± 0.302</td>
-              <td>1.721 ± 0.739</td>
-              <td>0.031 ± 0.020</td>
-              <td>0.118 ± 0.050</td>
-            </tr>
-            <tr>
-              <td><b>Strong Superv.</b></td>
-              <td><b>5.597 ± 0.809</b></td>
-              <td>0.710 ± 0.440</td>
-              <td><b>7.062 ± 1.225</b></td>
-              <td>0.047 ± 0.029</td>
-              <td><b>0.472 ± 0.081</b></td>
-            </tr>
-            <tr>
-              <td>Weak Superv.</td>
-              <td>7.929 ± 1.867</td>
-              <td><b>0.122 ± 0.172</b></td>
-              <td>1.566 ± 1.025</td>
-              <td><b>0.008 ± 0.011</b></td>
-              <td>0.105 ± 0.069</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="columns is-centered">
-        <div class="column is-8">
-          <div class="content">
-            <p>Website borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> and <a href="https://openvla.github.io/">OpenVLA</a> under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
-          </div>
+            <h3 class="title is-4">Help Timing & Frequency</h3>
+            <div class="table-card">
+                <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>TTFH (fail) ↓</th>
+                            <th>Triggers<sub>succ</sub> ↓</th>
+                            <th>Triggers<sub>fail</sub> (≥ 1 ok)</th>
+                            <th>Trigger Rate (success) ↓</th>
+                            <th>Trigger Rate (fail) ↑</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CP-W (Entropy)</td>
+                            <td>6.891 ± 2.257</td>
+                            <td>0.457 ± 0.302</td>
+                            <td>1.721 ± 0.739</td>
+                            <td>0.031 ± 0.020</td>
+                            <td>0.118 ± 0.050</td>
+                        </tr>
+                        <tr>
+                            <td><b>Strong Superv.</b></td>
+                            <td><b>5.597 ± 0.809</b></td>
+                            <td>0.710 ± 0.440</td>
+                            <td><b>7.062 ± 1.225</b></td>
+                            <td>0.047 ± 0.029</td>
+                            <td><b>0.472 ± 0.081</b></td>
+                        </tr>
+                        <tr>
+                            <td>Weak Superv.</td>
+                            <td>7.929 ± 1.867</td>
+                            <td><b>0.122 ± 0.172</b></td>
+                            <td>1.566 ± 1.025</td>
+                            <td><b>0.008 ± 0.011</b></td>
+                            <td>0.105 ± 0.069</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-    </div>
-  </footer>
+    </section>
+
+    <!--Conclusion-->
+    <section id="conclusion" class="section">
+        <div class="container is-max-desktop">
+            <div class="eyebrow">Discussion</div>
+            <h2 class="title is-3">Conclusion & Takeaways</h2>
+
+            <div class="content">
+                <ul>
+                    <li><strong>Token-level introspection works:</strong> modeling temporal uncertainty with a compact
+                        transformer yields earlier, more reliable help triggers than static scores.</li>
+                    <li><strong>Supervision trade-off:</strong> strong labels offer the best timing fidelity; weak
+                        labels remain competitive when train/test granularity aligns—making large-scale deployment
+                        practical.</li>
+                    <li><strong>Selective intervention:</strong> INSIGHT reduces unnecessary interrupts on success
+                        episodes while accelerating help on failures (lower TTFH, higher fail-trigger rate).</li>
+                    <li><strong>Future directions:</strong> active data collection, adaptive thresholds, and
+                        human-in-the-loop policies that leverage introspection for real-time recovery.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content">
+                        <p>Website borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> and
+                            <a href="https://openvla.github.io/">OpenVLA</a> under <a
+                                href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 </body>
+
 </html>
