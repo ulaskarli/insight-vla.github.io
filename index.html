@@ -98,7 +98,9 @@
                             <span class="author-block">
                                 <a href="https://ulaskarli.github.io">Ulas Berk Karli</a><sup>1</sup>,
                             </span>
-                            <span class="author-block">Ziyao Shangguan<sup>1</sup>,</span>
+                            <span class="author-block">
+                                <a href="https://ziyaosg.github.io">Ziyao Shangguan</a><sup>1</sup>,
+                            </span>
                             <span class="author-block">
                                 <a href="https://www.tescafitzgerald.com">Tesca Fitzgerald</a><sup>1</sup>
                             </span>
@@ -154,7 +156,7 @@
                 Recent Vision-Language-Action (VLA) models show strong generalization capabilities, yet they lack
                 introspective mechanisms for anticipating failures and requesting help from a human supervisor. We
                 present <b>INSIGHT</b>, a learning framework for leveraging token-level uncertainty signals to predict
-                when a VLA should request help. Using π₀-FAST as the underlying model, we extract per-token
+                when a VLA should request help. Using &pi;<sub>0</sub>-FAST as the underlying model, we extract per-token
                 <i>entropy</i>, <i>log-probability</i>, and Dirichlet-based estimates of <i>aleatoric and epistemic
                     uncertainty</i>, and train compact transformer classifiers to map these sequences to help triggers.
                 We explore supervision regimes for strong or weak supervision, and extensively compare them across
@@ -181,17 +183,32 @@
                     <!-- Use your figure from the paper -->
                     <img src="static/images/level_decomposition.svg"
                         alt="Episode, Step, Token levels and where uncertainty lives.">
-                    <figcaption class="cap">INSIGHT taps uncertainty <em>at the token level</em> from the VLA decoder,
-                        then reasons over short temporal windows to trigger help.</figcaption>
+                    <figcaption class="cap">INSIGHT taps uncertainty <em>at the token level</em> from the VLA,
+                        then reasons over temporal windows to trigger help.</figcaption>
                 </figure>
 
                 <div class="content">
-                    <p><span class="pill">Episode</span> One rollout end-to-end (success/fail). Labels are sparse and
-                        miss intra-episode dynamics.</p>
-                    <p><span class="pill">Step</span> Per-time-step supervision captures <em>when</em> to ask for help
-                        but ignores sub-token ambiguity.</p>
-                    <p><span class="pill">Token</span> Per-token distributions expose fine-grained uncertainty (entropy,
-                        −log p, Dirichlet AU/EU) that shift before step outcomes.</p>
+                    <p>
+                    <span class="pill">Token</span> is the infinitesimal unit produced during inference in VLAs. 
+                    A VLA generates <i>n</i> tokens, each drawn from its own probability distribution over the vocabulary. 
+                    Per-token distributions expose fine-grained uncertainty measures (entropy, −log&nbsp;p, Dirichlet-based AU/EU) 
+                    that can shift prior to step-level outcomes.
+                    </p>
+
+                    <p>
+                    <span class="pill">Step</span> consists of one cycle of collecting an observation, performing inference, 
+                    decoding the resulting token sequence into an action chunk, and executing it. 
+                    A step therefore involves the <i>n</i> tokens, which are not fixed in number per step—especially for &pi;<sub>0</sub>-FAST.
+                    </p>
+
+                    <p>
+                    <span class="pill">Episode</span> refers to one complete rollout (success or failure), which consists of multiple inferences by the VLA. 
+                    Formally, an episode includes all <i>K</i> steps:
+                    </p>
+
+                    <p style="text-align:center; font-family:monospace;">
+                    E = (a<sup>1:H</sup><sub>1</sub>, a<sup>1:H</sup><sub>2</sub>, …, a<sup>1:H</sup><sub>K</sub>)
+                    </p>
                     <div class="soft">
                         <strong>Key idea:</strong> model the <em>temporal evolution</em> of token-level uncertainty with
                         a compact transformer → earlier and more reliable help triggers.
@@ -249,8 +266,7 @@
                     <ul class="list-tight">
                         <li><strong>Inputs:</strong> token-level features per step: entropy, −log p, Dirichlet AU/EU.
                         </li>
-                        <li><strong>Windows:</strong> short temporal windows (e.g., 32–64 steps) with overlap.</li>
-                        <li><strong>Backbone:</strong> 2–4 layers, small hidden size; positional encodings for time.
+                        <li><strong>Backbone:</strong> 1–2 layers, small hidden size; positional encodings for time.
                         </li>
                         <li><strong>Objective:</strong> predict <em>help/no-help</em> for the window’s end step.</li>
                         <li><strong>Calibration:</strong> threshold via held-out set; compare to CP baselines (CP-E,
@@ -262,7 +278,7 @@
                     </div>
                 </div>
                 <figure>
-                    <img src="static/images/model_mini_transformer.svg" alt="Compact transformer diagram">
+                    <img src="static/images/icra_transformer_website.svg" alt="Compact transformer diagram">
                     <figcaption class="cap">A lightweight transformer over uncertainty sequences outperforms static
                         sequence scores.</figcaption>
                 </figure>
@@ -287,20 +303,31 @@
 
             <div class="soft">
                 <div class="columns is-multiline is-variable is-4">
-                    <div class="column is-4">
-                        <h3 class="title is-6">ID</h3>
-                        <p class="is-size-6">Lift/Place/Pour variants with standard backgrounds; short-horizon actions.
-                        </p>
-                    </div>
-                    <div class="column is-4">
-                        <h3 class="title is-6">Shift</h3>
-                        <p class="is-size-6">New distractors, layouts, and lighting; robustness to visual/motion
-                            changes.</p>
-                    </div>
-                    <div class="column is-4">
-                        <h3 class="title is-6">Sim-OOD</h3>
-                        <p class="is-size-6">LIBERO-10 multi-step instructions; synthetic mismatch vs real dynamics.</p>
-                    </div>
+                <div class="column is-4">
+                <h3 class="title is-6">ID</h3>
+                <p class="is-size-6">
+                    Lift and Pick-Place variants in the <b>Kitchen (real-world)</b> environment. 
+                    Objects and backgrounds match those seen during training.
+                </p>
+                </div>
+
+                <div class="column is-4">
+                <h3 class="title is-6">Shift</h3>
+                <p class="is-size-6">
+                    Evaluation in the Kitchen with <i>distribution shifts</i>: new distractor objects, 
+                    changes in shape, color, location, and orientation. Tests robustness to visual variation 
+                    while staying in the same environment.
+                </p>
+                </div>
+
+                <div class="column is-4">
+                <h3 class="title is-6">Sim-OOD</h3>
+                <p class="is-size-6">
+                    Cross-domain evaluation between <b>real Kitchen</b> and <b>simulated LIBERO-10</b>. 
+                    Objects and tasks differ completely, and the underlying &pi;<sub>0</sub>-FAST checkpoints differ as well 
+                    (Kitchen-trained vs. LIBERO-trained). This setting represents true out-of-distribution generalization.
+                </p>
+                </div>
                 </div>
             </div>
         </div>
