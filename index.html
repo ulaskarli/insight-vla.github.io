@@ -345,8 +345,8 @@
         // ===== Rollout data (replace with your real files) =====
         const ROLLOUTS = [
             // ID
-            { src: "static/videos/l_c_19_S.mp4", thumb: "static/videos/l_c_19_S.mp4", dataset: "ID", outcome: "Success", caption: "Lift the Corn • ID • Success" },
-            { src: "static/videos/l_c_20_F.mp4", thumb: "static/videos/l_c_20_F.mp4", dataset: "ID", outcome: "Fail", caption: "Lift the Corn • ID • Fail" },
+            { src: "static/videos/l_c_20_S", thumb: "static/videos/l_c_20_S.mp4", dataset: "ID", outcome: "Success", caption: "Lift the Corn • ID • Success" },
+            { src: "static/videos/l_c_19_F.mp4", thumb: "static/videos/l_c_19_F.mp4", dataset: "ID", outcome: "Fail", caption: "Lift the Corn • ID • Fail" },
             { src: "static/videos/p_p_s_11_S.mp4", thumb: "static/videos/p_p_s_11_S.mp4", dataset: "ID", outcome: "Success", caption: "Put the Pot in the Sink • ID • Success" },
             { src: "static/videos/p_p_s_16_F.mp4", thumb: "static/videos/p_p_s_16_F.mp4", dataset: "ID", outcome: "Fail", caption: "Put the Pot in the Sink • ID • Fail" },
             { src: "static/videos/p_c_p_9_S.mp4", thumb: "static/videos/p_c_p_9_S.mp4", dataset: "ID", outcome: "Success", caption: "Put the Corn in the Pot • ID • Success" },
@@ -397,6 +397,9 @@
         }
 
         if (datasetSel && outcomeSel && grid) {
+            // Default filter selection
+            datasetSel.value = "ID";   // or "Shift" / "Sim-OOD"
+            outcomeSel.value = "Success"; // optional
             datasetSel.addEventListener('change', renderRollouts);
             outcomeSel.addEventListener('change', renderRollouts);
             renderRollouts();
