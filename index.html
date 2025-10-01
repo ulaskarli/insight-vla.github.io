@@ -602,6 +602,73 @@
         </div>
     </section>
 
+    <!-- Takeaways -->
+    <section id="discussion" class="section">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3">Discussion & Takeaways</h2>
+
+        <div class="content">
+        <h4 class="title is-5">Do uncertainty metrics provide predictive power for requesting help?</h4>
+        <p>
+            Yes. Across all experiments, token-level uncertainty signals (entropy, log-probability, aleatoric and epistemic uncertainty) 
+            offered predictive power beyond random guessing (accuracy/F1 > 0.5). The exception was the weak-training/strong-testing 
+            case under distribution shift, where noisy supervision mismatched strict evaluation, reducing F1 below 0.5. Importantly, 
+            this establishes the first benchmark for introspection in VLA models. Even conformal prediction (CP), though based only 
+            on aggregated sequence-level scores, occasionally achieved F1 ≈ 0.7 under weak-label evaluation, showing alignment when 
+            calibration and evaluation matched.
+        </p>
+
+        <h4 class="title is-5">How does aggregate vs. sequential use of metrics affect performance?</h4>
+        <p>
+            CP, which aggregates sequence-level scores, occasionally performed well under weak-label evaluation but generally 
+            hovered near chance (accuracy/F1 close to 0.5). In contrast, <b>INSIGHT</b> leverages the sequential structure of token-level 
+            signals via transformers, producing consistently higher accuracy and F1. This confirms that VLA uncertainty is inherently 
+            temporal and requires sequence modeling.
+        </p>
+
+        <h4 class="title is-5">How do strong vs. weak labels compare?</h4>
+        <p>
+            <b>Strong labels</b> (step-level) provide fine-grained supervision and yield the most reliable models, but they are costly 
+            and subjective to collect. <b>Weak labels</b> (episode-level success/failure) are scalable and objective, but noisier. 
+            Strongly supervised transformers achieved the highest F1 in nearly all conditions, while weakly supervised models were 
+            conservative—triggering less often, missing failures, but remaining competitive when evaluated under weak labels. 
+            CP calibrated on weak labels outperformed in weak-label tests but lagged behind transformers overall.
+        </p>
+
+        <h4 class="title is-5">When and how often do models trigger help?</h4>
+        <p>
+            The strongly supervised model triggered help earliest and most frequently, maximizing failure coverage but risking 
+            over-intervention. Weakly supervised models were conservative, rarely interrupting successes but sometimes missing 
+            failures. CP offered middle-ground behavior with moderate timing and frequency. The optimal choice depends on whether 
+            safety (catching failures early) or unobtrusiveness is prioritized.
+        </p>
+
+        <h4 class="title is-5">How transferable are models under distribution shift?</h4>
+        <p>
+            All models degraded under distribution shift. Strongly supervised models degraded least. CP maintained high recall but 
+            incurred many false positives and low accuracy, showing the difficulty of calibrating sequence-level scores when 
+            assumptions are violated. INSIGHT generally balanced performance better, particularly under strong-label tests, where 
+            temporal modeling offered more reliable help triggers than CP.
+        </p>
+
+        <h4 class="title is-5">Does adding more data help?</h4>
+        <p>
+            Adding shifted data to increase training size did not consistently improve robustness. In fact, strongly supervised 
+            transformers sometimes saw small drops in performance. Weakly supervised models benefited more when evaluated with 
+            weak labels, but overall, label quality proved more important than sheer dataset size.
+        </p>
+
+        <h4 class="title is-5">How do models transfer across simulation OOD?</h4>
+        <p>
+            Despite training on real-world kitchen data, INSIGHT transferred surprisingly well to simulation-based OOD tests using 
+            LIBERO. Strongly supervised models, especially the jumbo variant, reached accuracy and F1 approaching that of the 
+            sim-only benchmark. This shows that token-level uncertainty features are robust across environments and policy checkpoints, 
+            suggesting that strong-label introspection modules can generalize without retraining or re-annotation.
+        </p>
+        </div>
+    </div>
+    </section>
+
     <!--Conclusion-->
     <section id="conclusion" class="section">
         <div class="container is-max-desktop">
