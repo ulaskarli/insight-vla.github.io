@@ -139,14 +139,34 @@
 
     <!-- Teaser Video -->
     <section class="hero teaser teaser-video">
-        <div class="container is-max-desktop has-text-centered">
-            <div class="hero-body">
-                <video id="teaser" autoplay muted loop playsinline width="80%">
-                    <source src="static/videos/icra26_video.mp4" type="video/mp4">
-                </video>
+    <div class="container is-max-desktop has-text-centered">
+        <div class="hero-body">
+        <div style="position:relative;display:inline-block;width:80%">
+            <video id="teaser" autoplay loop playsinline controls style="width:100%;border-radius:12px">
+            <source src="static/videos/icra26_video.mp4" type="video/mp4">
+            </video>
+            <div id="unmute-tip" 
+                style="position:absolute;bottom:10px;right:10px;
+                        background:rgba(0,0,0,0.6);color:#fff;
+                        padding:6px 10px;border-radius:6px;
+                        font-size:0.9rem;">
+            ▶ Click speaker icon to unmute
             </div>
         </div>
+        </div>
+    </div>
     </section>
+
+    <script>
+    // Hide the tip after a few seconds or when user interacts
+    const tip = document.getElementById('unmute-tip');
+    const video = document.getElementById('teaser');
+    if (video && tip){
+        setTimeout(()=> tip.style.display='none', 4000);
+        video.addEventListener('volumechange', ()=> tip.style.display='none');
+        video.addEventListener('play', ()=> tip.style.display='none');
+    }
+    </script>
 
     <!-- Abstract Section -->
     <section class="section">
@@ -372,7 +392,7 @@
         // ===== Rollout data (replace with your real files) =====
         const ROLLOUTS = [
             // ID
-            { src: "static/videos/l_c_20_S", thumb: "static/videos/l_c_20_S.mp4", dataset: "ID", outcome: "Success", caption: "Lift the Corn • ID • Success" },
+            { src: "static/videos/l_c_20_S.mp4", thumb: "static/videos/l_c_20_S.mp4", dataset: "ID", outcome: "Success", caption: "Lift the Corn • ID • Success" },
             { src: "static/videos/l_c_19_F.mp4", thumb: "static/videos/l_c_19_F.mp4", dataset: "ID", outcome: "Fail", caption: "Lift the Corn • ID • Fail" },
             { src: "static/videos/p_p_s_11_S.mp4", thumb: "static/videos/p_p_s_11_S.mp4", dataset: "ID", outcome: "Success", caption: "Put the Pot in the Sink • ID • Success" },
             { src: "static/videos/p_p_s_16_F.mp4", thumb: "static/videos/p_p_s_16_F.mp4", dataset: "ID", outcome: "Fail", caption: "Put the Pot in the Sink • ID • Fail" },
@@ -531,6 +551,22 @@
             </div>
         </div>
     </section>
+
+    <!-- BibTex -->
+    <section id="bibtex" class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">BibTeX</h2>
+            <pre style="white-space:pre-wrap;background:#f9fafb;border:1px solid #ddd;border-radius:8px;padding:14px;overflow:auto">
+        @inproceedings{karli2026insight,
+        title={INSIGHT: Inference-time Sequence Introspection for Help-Triggering in Vision-Language-Action Models},
+        author={Karli, Ulas Berk and Shangguan, Ziyao and Fitzgerald, Tesca},
+        booktitle={arxiv},
+        year={2026}
+        }
+            </pre>
+            <p><a href="static/bibtex.bib">Download .bib</a></p>
+        </div>
+        </section>
 
     <!-- Footer -->
     <footer class="footer">
