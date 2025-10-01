@@ -135,8 +135,33 @@
   <script>
     // ===== Rollout data (replace with your real files) =====
     const ROLLOUTS = [
-      // {src:"static/videos/lift_ID_success_STRONG_ep42_ttfh3.mp4", thumb:"static/images/lift_ID_ep42.jpg", dataset:"ID", outcome:"Success", caption:"Lift • ID • Success"},
-      // {src:"static/videos/place_Shift_fail_WEAK_ep07_ttfh2.mp4", thumb:"static/images/place_Shift_ep07.jpg", dataset:"Shift", outcome:"Fail", caption:"Place • Shift • Fail"},
+      // ID
+      {src:"static/videos/l_c_19_S.mp4", thumb:"static/videos/l_c_19_S.mp4", dataset:"ID", outcome:"Success", caption:"Lift the Corn • ID • Success"},
+      {src:"static/videos/l_c_20_F.mp4", thumb:"static/videos/l_c_20_F.mp4", dataset:"ID", outcome:"Fail", caption:"Lift the Corn • ID • Fail"},
+      {src:"static/videos/p_p_s_11_S.mp4", thumb:"static/videos/p_p_s_11_S.mp4", dataset:"ID", outcome:"Success", caption:"Put the Pot in the Sink • ID • Success"},
+      {src:"static/videos/p_p_s_16_F.mp4", thumb:"static/videos/p_p_s_16_F.mp4", dataset:"ID", outcome:"Fail", caption:"Put the Pot in the Sink • ID • Fail"},
+      {src:"static/videos/p_c_p_9_S.mp4", thumb:"static/videos/p_c_p_9_S.mp4", dataset:"ID", outcome:"Success", caption:"Put the Corn in the Pot • ID • Success"},
+      {src:"static/videos/p_c_p_13_F.mp4", thumb:"static/videos/p_c_p_13_F.mp4", dataset:"ID", outcome:"Fail", caption:"Put the Corn in the Pot • ID • Fail"},
+      {src:"static/videos/l_e_9_S.mp4", thumb:"static/videos/l_e_9_S.mp4", dataset:"ID", outcome:"Success", caption:"Lift the Eggplant • ID • Success"},
+      {src:"static/videos/l_e_15_F.mp4", thumb:"static/videos/l_e_15_F.mp4", dataset:"ID", outcome:"Fail", caption:"Lift the Eggplant • ID • Fail"},
+      // Shift
+      {src:"static/videos/l_c_135_S.mp4", thumb:"static/videos/l_c_135_S.mp4", dataset:"Shift", outcome:"Success", caption:"Lift the Corn • Distribution Shift • Success"},
+      {src:"static/videos/l_c_151_F.mp4", thumb:"static/videos/l_c_151_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Lift the Corn • Distribution Shift • Fail"},
+      {src:"static/videos/p_p_s_82_S.mp4", thumb:"static/videos/p_p_s_82_S.mp4", dataset:"Shift", outcome:"Success", caption:"Put the Pot in the Sink • Distribution Shift • Success"},
+      {src:"static/videos/p_p_s_90_F.mp4", thumb:"static/videos/p_p_s_90_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Put the Pot in the Sink • Distribution Shift • Fail"},
+      {src:"static/videos/p_c_p_52_S.mp4", thumb:"static/videos/p_c_p_52_S.mp4", dataset:"Shift", outcome:"Success", caption:"Put the Corn in the Pot • Distribution Shift • Success"},
+      {src:"static/videos/p_c_p_62_F.mp4", thumb:"static/videos/p_c_p_62_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Put the Corn in the Pot • Distribution Shift • Fail"},
+      {src:"static/videos/l_e_84_S.mp4", thumb:"static/videos/l_e_84_S.mp4", dataset:"Shift", outcome:"Success", caption:"Lift the Eggplant • Distribution Shift • Success"},
+      {src:"static/videos/l_e_75_F.mp4", thumb:"static/videos/l_e_75_F.mp4", dataset:"Shift", outcome:"Fail", caption:"Lift the Eggplant • Distribution Shift • Fail"},
+      // Sim-OOD
+      {src:"static/videos/10_4_30_S.mp4", thumb:"static/videos/10_4_30_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 4 • Sim-OOD • Success"},
+      {src:"static/videos/10_4_38_F.mp4", thumb:"static/videos/10_4_38_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 4 • Sim-OOD • Fail"},
+      {src:"static/videos/10_5_16_S.mp4", thumb:"static/videos/10_5_16_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 5 • Sim-OOD • Success"},
+      {src:"static/videos/10_5_11_F.mp4", thumb:"static/videos/10_5_11_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 5 • Sim-OOD • Fail"},
+      {src:"static/videos/10_7_18_S.mp4", thumb:"static/videos/10_7_18_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 7 • Sim-OOD • Success"},
+      {src:"static/videos/10_7_5_F.mp4", thumb:"static/videos/10_7_5_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 7 • Sim-OOD • Fail"},
+      {src:"static/videos/10_9_17_S.mp4", thumb:"static/videos/10_9_17_S.mp4", dataset:"Sim-OOD", outcome:"Success", caption:"Libero 10 Task 9 • Sim-OOD • Success"},
+      {src:"static/videos/10_9_8_F.mp4", thumb:"static/videos/10_9_8_F.mp4", dataset:"Sim-OOD", outcome:"Fail", caption:"Libero 10 Task 9 • Sim-OOD • Fail"},
     ];
 
     // ===== Render & Filter =====
@@ -176,25 +201,25 @@
 
       <h3 class="title is-4">In-Distribution Performance</h3>
       <figure>
-        <img src="static/images/ID_sign.jpeg" alt="Boxplots of accuracy, F1 across 10 folds.">
+        <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
         <figcaption>Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and perplexity (CP-P). Each box plot indicates mean (dashed horizontal lines) and median (solid horizontal lines) performance across folds. Error bars indicate 1 standard deviation. Significance by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.</figcaption>
       </figure>
 
       <h3 class="title is-4">Distribution Shift Performance</h3>
       <figure>
-        <img src="static/images/OOD.jpeg" alt="Boxplots under distribution shift.">
+        <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
         <figcaption>Performance under distribution shift. Strong supervision captures fine-grained uncertainty; Weak supervision competitive when train/eval align.</figcaption>
       </figure>
 
       <h3 class="title is-4">Large In-Distribution Performance</h3>
       <figure>
-        <img src="static/images/LID.jpeg" alt="Large-scale in-distribution results.">
+        <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
         <figcaption>Temporal modeling of token sequences vs static sequence-level scores.</figcaption>
       </figure>
 
       <h3 class="title is-4">Simulation OOD</h3>
       <figure>
-        <img src="static/images/Sim OOD.jpeg" alt="Simulation OOD results.">
+        <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
         <figcaption>Performance under simulated OOD setup.</figcaption>
       </figure>
 
