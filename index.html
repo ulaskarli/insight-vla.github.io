@@ -199,7 +199,6 @@
 
         <figure>
         <img src="static/images/inference.gif" alt="Inference process GIF showing strong label example">
-        <figcaption class="cap">During each step of an episode, the system determines whether help is required.</figcaption>
         </figure>
 
         <p class="content has-text-justified">
@@ -379,8 +378,14 @@
 
     <!-- Rollouts Section with dropdown filters -->
     <section id="rollouts" class="section">
-        <div class="container is-max-desktop">
-            <h2 class="title is-3">Rollouts</h2>
+    <div class="container is-max-desktop">
+        <h2 class="title is-3">Rollouts</h2>
+        <p class="content has-text-justified" style="margin-bottom:18px">
+        If you would like to explore examples from our datasets, this interactive section allows you to 
+        browse rollout videos filtered by <b>dataset</b> (In-Distribution, Distribution Shift, or Simulation-OOD) 
+        and by <b>outcome</b> (Success or Failure). These examples illustrate how our model behaves across 
+        different settings and why uncertainty-aware help detection is necessary.
+        </p>
             <div class="field is-grouped is-grouped-multiline" style="margin-bottom:14px">
                 <div class="control">
                     <div class="select is-link is-small">
@@ -481,33 +486,67 @@
     <section class="section">
         <div class="container is-max-desktop">
             <h2 class="title is-3">Results</h2>
+            <p class="cap">
+            Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and
+            perplexity (CP-P). Boxplots show mean (dashed) and median (solid) across folds; error bars denote ±1 SD.
+            Paired Wilcoxon significance: * p&lt;0.05, ** p&lt;0.01. Higher is better unless noted.
+            </p>
 
             <h3 class="title is-4">In-Distribution Performance</h3>
             <figure>
                 <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
-                <figcaption>Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and
-                    perplexity (CP-P). Each box plot indicates mean (dashed horizontal lines) and median (solid
-                    horizontal lines) performance across folds. Error bars indicate 1 standard deviation. Significance
-                    by paired Wilcoxon (two-sided) across folds: * p&lt;0.05, ** p&lt;0.01.</figcaption>
+                <div class="content" style="margin-top:10px">
+                <ul class="is-size-6">
+                    <li><b>Setting.</b> Tuning, calibration, and testing all come from the same distribution, 
+                        so CP’s coverage guarantees formally hold.</li>
+                    <li><b>Signal exists.</b> Token-level uncertainty (entropy, log-p, AU, EU) carries predictive 
+                        power beyond random (accuracy/F1 &gt; 0.5).</li>
+                    <li><b>Baselines vs. INSIGHT.</b> CP—though sequence-level—sometimes reaches ~0.7 under 
+                        <i>weak-label</i> evaluation when calibration and evaluation align, but temporal transformers 
+                        remain stronger overall.</li>
+                </ul>
+                </div>
             </figure>
 
             <h3 class="title is-4">Distribution Shift Performance</h3>
             <figure>
                 <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
-                <figcaption>Performance under distribution shift. Strong supervision captures fine-grained uncertainty;
-                    Weak supervision competitive when train/eval align.</figcaption>
+                <div class="content" style="margin-top:10px">
+                <ul class="is-size-6">
+                    <li><b>Setting.</b> Object positions/orientations and unseen objects differ from training; 
+                        CP’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</li>
+                    <li><b>Label/regime mismatch.</b> The weak-training / strong-testing case can 
+                        drop below F1=0.5 due to noisy supervision evaluated with strict labels under shift.</li>
+                </ul>
+                </div>
             </figure>
 
             <h3 class="title is-4">Large In-Distribution Performance</h3>
             <figure>
                 <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
-                <figcaption>Temporal modeling of token sequences vs static sequence-level scores.</figcaption>
+                <div class="content" style="margin-top:10px">
+                <ul class="is-size-6">
+                    <li><b>Setting.</b> ID and Shift are combined to increase training diversity while 
+                        <i>maintaining exchangeability</i>, letting us assess whether scaling <i>within</i> 
+                        distribution helps.</li>
+                    <li><b>Takeaway.</b> Modeling the <i>temporal evolution</i> of token-level uncertainty with 
+                        transformers is more predictive than static sequence-level scores, supporting sequential 
+                        models for help detection.</li>
+                </ul>
+                </div>
             </figure>
 
             <h3 class="title is-4">Simulation OOD</h3>
             <figure>
                 <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
-                <figcaption>Performance under simulated OOD setup.</figcaption>
+                <div class="content" style="margin-top:10px">
+                <ul class="is-size-6">
+                    <li><b>Setting.</b> Train on real-world π<sub>0</sub>-FAST, test on a <i>different</i> π<sub>0</sub>-FAST 
+                        fine-tuned on LIBERO → shift in tasks <i>and</i> policy behavior; a highly OOD stress test.</li>
+                    <li><b>Compared variants.</b> Fig. 4 contrasts transformer variants (regular, jumbo, sim-only); 
+                        significance assessed by paired Wilcoxon.</li>
+                </ul>
+                </div>
             </figure>
 
             <h3 class="title is-4">Help Timing & Frequency</h3>
@@ -550,6 +589,15 @@
                         </tr>
                     </tbody>
                 </table>
+                <p class="content has-text-justified" style="margin-top:10px">
+                <b>What we measure.</b> Time-to-First-Help (TTFH), trigger counts on success vs. failure, 
+                and per-step trigger rates characterize <i>when</i> and <i>how often</i> interventions occur.
+                </p>
+                <ul class="is-size-6">
+                <li><b>Early vs. conservative.</b> Strong supervision fires <i>earlier</i> on failing episodes (lower TTFH) 
+                    and more often during fails (higher fail-rate), at the cost of more triggers on successes; 
+                    CP-W and Weak are more conservative (fewer success triggers) but react later/less on fails.</li>
+                </ul>
             </div>
         </div>
     </section>
