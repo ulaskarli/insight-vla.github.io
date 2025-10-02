@@ -216,10 +216,6 @@
         <div class="eyebrow">Problem</div>
         <h2 class="title is-3">Inference in VLAs</h2>
 
-        <figure>
-        <img src="static/images/inference.gif" alt="Inference process GIF showing strong label example">
-        </figure>
-
         <p class="content has-text-justified">
         Our work builds upon <b>&pi;<sub>0</sub>-FAST</b>, a VLA model that takes as input a natural language instruction, 
         RGB images of the environment, and the robot’s state. The model processes these inputs in a forward pass and auto-regressively generates 
@@ -231,6 +227,11 @@
         such as entropy, negative log-likelihood, or Dirichlet-based measures. Our central research question is therefore: 
         <b>Can token-level uncertainty reliably indicate when the robot should request human help?</b>
         </p>
+
+        <figure>
+        <img src="static/images/inference.gif" alt="Inference process GIF showing strong label example">
+        </figure>
+
     </div>
     </section>
 
@@ -286,28 +287,28 @@
             <div class="eyebrow">Modeling</div>
             <h2 class="title is-3">Training Compact Transformers for Introspection</h2>
 
-            <div class="twocol">
-                <div>
-                    <ul class="list-tight">
-                        <li><strong>Inputs:</strong> token-level features per step: entropy, −log p, Dirichlet AU/EU.
-                        </li>
-                        <li><strong>Backbone:</strong> 1–2 layers, small hidden size; positional encodings for time.
-                        </li>
-                        <li><strong>Objective:</strong> predict <em>help/no-help</em> for the window’s end step.</li>
-                        <li><strong>Calibration:</strong> threshold via held-out set; compare to CP baselines (CP-E,
-                            CP-P).</li>
-                    </ul>
-                    <div class="soft">
-                        <strong>Why small?</strong> Token features are informative—the introspector can stay
-                        <em>compact</em> for fast, online triggering.
-                    </div>
+            <figure>
+                <img src="static/images/icra_transformer_website.svg" alt="Compact transformer diagram">
+                <figcaption class="cap">A lightweight transformer over uncertainty sequences outperforms static
+                    sequence scores.</figcaption>
+            </figure>
+
+            <div>
+                <ul class="list-tight">
+                    <li><strong>Inputs:</strong> token-level features per step: entropy, −log p, Dirichlet AU/EU.
+                    </li>
+                    <li><strong>Backbone:</strong> 1–2 layers, small hidden size; positional encodings for time.
+                    </li>
+                    <li><strong>Objective:</strong> predict <em>help/no-help</em> for the window’s end step.</li>
+                    <li><strong>Calibration:</strong> threshold via held-out set; compare to CP baselines (CP-E,
+                        CP-P).</li>
+                </ul>
+                <div class="soft">
+                    <strong>Why small?</strong> Token features are informative—the introspector can stay
+                    <em>compact</em> for fast, online triggering.
                 </div>
-                <figure>
-                    <img src="static/images/icra_transformer_website.svg" alt="Compact transformer diagram">
-                    <figcaption class="cap">A lightweight transformer over uncertainty sequences outperforms static
-                        sequence scores.</figcaption>
-                </figure>
             </div>
+            
         </div>
     </section>
 
