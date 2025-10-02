@@ -212,10 +212,10 @@
     </section>
     <!-- Problem -->
     <section id="Problem" class="section">
-        <p class="cap">
+    <div class="container is-max-desktop">
+                <p class="cap">
         To ground the discussion, we first outline how inference works in a modern VLA and where uncertainty signals arise.
         </p>
-    <div class="container is-max-desktop">
         <div class="eyebrow">Problem</div>
         <h2 class="title is-3">Inference in VLAs</h2>
 
@@ -240,10 +240,10 @@
 
     <!-- episode vs step vs token -->
     <section id="granularity" class="section">
-        <p class="cap">
+        <div class="container is-max-desktop">
+                    <p class="cap">
         With the inference loop in mind, we next clarify the three levels of granularity—episode, step, and token—used throughout our analysis.
         </p>
-        <div class="container is-max-desktop">
             <div class="eyebrow">Granularity of signals</div>
             <h2 class="title is-3">Episode vs Step vs Token</h2>
 
@@ -289,10 +289,10 @@
 
     <!-- Transformer -->
     <section id="models" class="section">
-        <p class="cap">
+        <div class="container is-max-desktop">
+            <p class="cap">
         INSIGHT operates on token-level signals over time. We formalize this with a lightweight transformer that predicts when to request help.
         </p>
-        <div class="container is-max-desktop">
             <div class="eyebrow">Modeling</div>
             <h2 class="title is-3">Training Compact Transformers for Introspection</h2>
 
@@ -323,10 +323,10 @@
 
     <!-- Supervison labels -->
     <section id="labels" class="section">
-        <p class="cap">
+        <div class="container is-max-desktop">
+            <p class="cap">
         The effectiveness of introspection depends on supervision. We compare dense step-level (strong) and scalable episode-level (weak) labels.
         </p>
-        <div class="container is-max-desktop">
             <div class="eyebrow">Supervision</div>
             <h2 class="title is-3">Strong vs Weak Labels</h2>
 
@@ -363,10 +363,10 @@
 
     <!--Datasets-->
     <section id="datasets" class="section">
-        <p class="cap">
+        <div class="container is-max-desktop">
+            <p class="cap">
         We evaluate across complementary settings to probe generalization: in-distribution, real-world distribution shift, and simulation OOD.
         </p>
-        <div class="container is-max-desktop">
             <div class="eyebrow">Datasets</div>
             <h2 class="title is-3">Evaluation Settings</h2>
 
@@ -519,10 +519,10 @@
 
     <!-- Results Section (placeholder for boxplots and tables) -->
     <section class="section">
-        <p class="cap">
+        <div class="container is-max-desktop">
+            <p class="cap">
         We now quantify performance: accuracy/F1 across folds, distribution-shift behavior, scale-up effects, and help timing/frequency.
         </p>
-        <div class="container is-max-desktop">
             <h2 class="title is-3">Results</h2>
             <p class="cap">
             Results for the transformer (INSIGHT) and Conformal Prediction based on entropy (CP-E) and
@@ -642,12 +642,12 @@
 
     <!-- Takeaways -->
     <section id="discussion" class="section">
-        <p class="cap">
-        What do these numbers mean for deployment? The Q&A below distills the main lessons from our experiments.
-        </p>
     <div class="container is-max-desktop">
         <div class="eyebrow">Discussion</div>
         <h2 class="title is-3">Takeaways</h2>
+        <p class="cap">
+        What do these numbers mean for deployment? The Q&A below distills the main lessons from our experiments.
+        </p>
 
         <div class="content">
         <h4 class="title is-5">Do uncertainty metrics provide predictive power for requesting help?</h4>
@@ -735,11 +735,11 @@
 
     <!-- BibTex -->
     <section id="bibtex" class="section">
-        <p class="cap">
-        If you found this useful, please cite INSIGHT using the entry below.
-        </p>
         <div class="container is-max-desktop">
             <h2 class="title is-3">BibTeX</h2>
+            <p class="cap">
+        If you found this useful, please cite INSIGHT using the entry below.
+        </p>
             <pre style="white-space:pre-wrap;background:#f9fafb;border:1px solid #ddd;border-radius:8px;padding:14px;overflow:auto">
         @inproceedings{karli2026insight,
         title={INSIGHT: Inference-time Sequence Introspection for Help-Triggering in Vision-Language-Action Models},
