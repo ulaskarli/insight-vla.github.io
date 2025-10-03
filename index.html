@@ -707,7 +707,7 @@
     </section-->
 
     <!-- Takeaways -->
-<section id="conclusion" class="section">
+<!--section id="conclusion" class="section">
   <div class="container is-max-desktop">
     <div class="eyebrow">Takeaways</div>
     <h2 class="title is-3">What INSIGHT Shows</h2>
@@ -739,6 +739,36 @@
         <li><strong>Adaptive thresholds:</strong> tune for safety vs. intrusiveness per task, user, or environment.</li>
         <li><strong>Human-in-the-loop recovery:</strong> integrate triggers with teleop/corrective feedback for real-time mitigation.</li>
       </ul>
+    </div>
+  </div>
+</section-->
+
+<!-- Takeaways -->
+<section id="conclusion" class="section">
+  <div class="container is-max-desktop">
+    <div class="eyebrow">Takeaways</div>
+    <h2 class="title is-3">Conclusion & Future Directions</h2>
+
+    <div class="content has-text-justified">
+
+      <h3 class="title is-5">Takeaways</h3>
+      <p><strong>Token-level introspection works.</strong> Modeling temporal uncertainty with a compact transformer yields earlier and more reliable help triggers than static sequence-level scores, demonstrating the need to capture sequence dynamics rather than treating uncertainty as a single snapshot.</p>
+
+      <p><strong>Supervision quality matters more than scale.</strong> Strong step-level labels consistently provide the most precise timing and highest F1 scores. Weak labels remain competitive when training and testing align, but dataset size was less important than label fidelity for robust introspection.</p>
+
+      <p><strong>Weak supervision remains viable for scalability.</strong> Episode-level labels are easy and cheap to collect and can support deployment scenarios where dense step annotations are infeasible, though they inevitably trade off some fidelity compared to strong supervision.</p>
+
+      <p><strong>Help triggering is a design choice.</strong> Strongly supervised models intervene earlier and more frequently, maximizing safety coverage but risking over-intervention. Weakly supervised and CP-based models are more conservative, favoring unobtrusiveness at the cost of missed failures.</p>
+
+      <p><strong>Generalization is challenging but tractable.</strong> All models degrade under distribution shift, but strongly supervised transformers degrade least and maintain more balanced precision and recall. Moreover, models trained on real-world data transferred surprisingly well to simulation OOD, suggesting stability of token-level uncertainty features across environments and checkpoints.</p>
+
+      <p><strong>Conformal prediction provides a baseline, not a substitute.</strong> CP can align with weak-label evaluation when calibration and testing match, but its reliance on aggregated sequence scores limits robustness compared to temporal modeling.</p>
+
+      <h3 class="title is-5" style="margin-top:1.2em">Future Directions</h3>
+      <p><strong>Active learning is the next frontier.</strong> INSIGHT’s uncertainty signals create natural hooks for prioritizing annotation, adaptively setting thresholds, and guiding human-in-the-loop recovery policies. Extending introspection into active data collection loops offers a path toward scalable, real-time learning.</p>
+
+      <p><strong>Toward adaptive deployment.</strong> Future work will explore how help-triggering policies can adapt dynamically to different environments, user preferences, and task criticalities—balancing safety, efficiency, and user experience.</p>
+
     </div>
   </div>
 </section>
