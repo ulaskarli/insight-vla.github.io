@@ -260,14 +260,16 @@
                     <p>
                     <span class="pill">Token</span> is the infinitesimal unit produced during inference in VLAs. 
                     A VLA generates <i>n</i> tokens, each drawn from its own probability distribution over the vocabulary. 
-                    Per-token distributions expose fine-grained uncertainty measures (entropy, −log&nbsp;p, Dirichlet-based AU/EU) 
-                    that can shift prior to step-level outcomes.
+                    </p>
+
+                    <p>
+                    <span class="pill">Action</span> involves the <i>n</i> tokens, which are not fixed in number per
+                     for &pi;<sub>0</sub>-FAST, decoded in to a chunk of robot actions.
                     </p>
 
                     <p>
                     <span class="pill">Step</span> consists of one cycle of collecting an observation, performing inference, 
                     decoding the resulting token sequence into an action chunk, and executing it. 
-                    A step therefore involves the <i>n</i> tokens, which are not fixed in number per step—especially for &pi;<sub>0</sub>-FAST.
                     </p>
 
                     <p>
@@ -280,7 +282,7 @@
                     </p>
                     <div class="soft">
                         <strong>Key idea:</strong> model the <em>temporal evolution</em> of token-level uncertainty with
-                        a compact transformer → earlier and more reliable help triggers.
+                        a compact transformer → more reliable help triggers.
                     </div>
                 </div>
             </div>
@@ -297,8 +299,7 @@
         </p>
             <figure>
                 <img src="static/images/icra_transformer_website.svg" alt="Compact transformer diagram">
-                <figcaption class="cap">A lightweight transformer over uncertainty sequences outperforms static
-                    sequence scores.</figcaption>
+                <figcaption class="cap">A lightweight transformer over uncertainty sequences.</figcaption>
             </figure>
 
             <div>
@@ -308,11 +309,9 @@
                     <li><strong>Backbone:</strong> 1–2 layers, small hidden size; positional encodings for time.
                     </li>
                     <li><strong>Objective:</strong> predict <em>help/no-help</em> for the window’s end step.</li>
-                    <li><strong>Calibration:</strong> threshold via held-out set; compare to CP baselines (CP-E,
-                        CP-P).</li>
                 </ul>
                 <div class="soft">
-                    <strong>Why small?</strong> Token features are informative—the introspector can stay
+                    <strong>Why a small transformer?</strong> Token features are informative—the introspector transformer can stay
                     <em>compact</em> for fast, online triggering.
                 </div>
             </div>
@@ -326,7 +325,7 @@
             <div class="eyebrow">Supervision</div>
             <h2 class="title is-3">Strong vs Weak Labels</h2>
             <p class="cap">
-        The effectiveness of introspection depends on supervision. We compare dense step-level (strong) and scalable episode-level (weak) labels.
+        The effectiveness of introspection depends on supervision of the compact transformer. We compare dense step-level (strong) and scalable episode-level (weak) labels.
         </p>
             <div class="columns is-variable is-6">
                 <div class="column">
@@ -344,15 +343,14 @@
                 </div>
                 <div class="column">
                     <h3 class="title is-5">Weak (episode labels / MIL)</h3>
-                    <p>Only episode-level success/fail. We use multiple-instance learning to supervise the token-window
-                        classifier.</p>
+                    <p>Only episode-level success/fail. We use multiple-instance learning to supervise the transformer.</p>
                     <figure>
                         <img src="static/images/weak_superv.gif" alt="Weak label example GIF">
                         <figcaption class="cap">Each episode is labeled as success or failure</figcaption>
                     </figure>
                     <ul class="list-tight">
                         <li>Pros: scalable, easy to collect.</li>
-                        <li>Cons: noisier; best when train/eval granularity aligns.</li>
+                        <li>Cons: noisier; performance decays when train/eval granularity do not align.</li>
                     </ul>
                 </div>
             </div>
@@ -367,17 +365,12 @@
 
             <div class="content">
                 <p>We evaluate across three settings to probe generalization and robustness:</p>
-                <ul class="list-tight">
-                    <li><span class="pill">ID</span> In-Distribution tasks matching training distribution.</li>
-                    <li><span class="pill">Shift</span> Real-world distribution shift (scenes/objects/placements).</li>
-                    <li><span class="pill">Sim-OOD</span> Simulation OOD tasks (e.g., LIBERO-10 variants).</li>
-                </ul>
             </div>
 
             <div class="soft">
                 <div class="columns is-multiline is-variable is-4">
                 <div class="column is-4">
-                <h3 class="title is-6">ID</h3>
+                <h3 class="title is-6">In-Distribution</h3>
                 <p class="is-size-6">
                     Lift and Pick-Place variants in the <b>Kitchen (real-world)</b> environment. 
                     Objects and backgrounds match those seen during training.
@@ -385,7 +378,7 @@
                 </div>
 
                 <div class="column is-4">
-                <h3 class="title is-6">Shift</h3>
+                <h3 class="title is-6">Distribution Shift</h3>
                 <p class="is-size-6">
                     Evaluation in the Kitchen with <i>distribution shifts</i>: new distractor objects, 
                     changes in shape, color, location, and orientation. Tests robustness to visual variation 
@@ -394,7 +387,7 @@
                 </div>
 
                 <div class="column is-4">
-                <h3 class="title is-6">Sim-OOD</h3>
+                <h3 class="title is-6">Simulated OOD</h3>
                 <p class="is-size-6">
                     Cross-domain evaluation between <b>real Kitchen</b> and <b>simulated LIBERO-10</b>. 
                     Objects and tasks differ completely, and the underlying &pi;<sub>0</sub>-FAST checkpoints differ as well 
