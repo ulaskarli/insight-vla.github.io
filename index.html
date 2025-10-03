@@ -222,6 +222,10 @@
         a sequence of tokens. These tokens are then decoded into continuous joint actions, which the robot executes in the environment.
         </p>
 
+        <figure>
+        <img src="static/images/pi0fast_inference.gif" alt="Inference process of PI0-FAST">
+        </figure>
+
         <p class="content has-text-justified">
         Importantly, each token is drawn from its own probability distribution over the action vocabulary. This exposes <i>token-level uncertainty signals</i>, 
         such as entropy, negative log-likelihood, or Dirichlet-based measures. Our central research question is therefore: 
@@ -229,7 +233,7 @@
         </p>
 
         <figure>
-        <img src="static/images/inference.gif" alt="Inference process GIF showing strong label example">
+        <img src="static/images/rq.gif" alt="Inference process GIF showing token-level probability distributions">
         </figure>
 
     </div>
