@@ -144,7 +144,7 @@
                                     <a href="https://github.com/ulaskarli/insight-vla-help-triggers"
                                         class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon"><i class="fab fa-github"></i></span>
-                                        <span>Code</span>
+                                        <span>Code (Soon)</span>
                                     </a>
                                 </span>
                             </div>
@@ -264,7 +264,7 @@
 
                     <p>
                     <span class="pill">Action</span> involves the <i>n</i> tokens, which are not fixed in number per
-                     for &pi;<sub>0</sub>-FAST, decoded in to a chunk of robot actions.
+                    inference for &pi;<sub>0</sub>-FAST, decoded in to a chunk of robot actions.
                     </p>
 
                     <p>
@@ -295,7 +295,7 @@
             <div class="eyebrow">Modeling</div>
             <h2 class="title is-3">Training Compact Transformers for Introspection</h2>
 <p class="cap">
-        INSIGHT operates on token-level signals over time. We formalize this with a lightweight transformer that predicts when to request help.
+        Our approach INSIGHT operates on token-level signals over time. We imlpement this by training a lightweight transformer that predicts when to request help.
         </p>
             <figure>
                 <img src="static/images/icra_transformer_website.svg" alt="Compact transformer diagram">
@@ -325,7 +325,7 @@
             <div class="eyebrow">Supervision</div>
             <h2 class="title is-3">Strong vs Weak Labels</h2>
             <p class="cap">
-        The effectiveness of introspection depends on supervision of the compact transformer. We compare dense step-level (strong) and scalable episode-level (weak) labels.
+        <b>How do we train this model?</b>The effectiveness of introspection depends on supervision of the compact transformer. We compare dense step-level (strong) and scalable episode-level (weak) labels.
         </p>
             <div class="columns is-variable is-6">
                 <div class="column">
@@ -350,7 +350,7 @@
                     </figure>
                     <ul class="list-tight">
                         <li>Pros: scalable, easy to collect.</li>
-                        <li>Cons: noisier; performance decays when train/eval granularity do not align.</li>
+                        <li>Cons: noisier; results in delayed help triggers.</li>
                     </ul>
                 </div>
             </div>
@@ -517,6 +517,9 @@
 
             <div class="content">
             <h3 class="title is-4">In-Distribution Performance</h3>
+            <p class="content has-text-justified" style="margin-top:10px"><b>Setting.</b> 
+                Calibration, and testing all come from the same distribution, 
+                so Conformal Prediction's coverage guarantees formally hold.</p>
             <p><b>Do uncertainty metrics provide predictive power for requesting help?</b></p>
             <p>
             <p>
@@ -526,8 +529,6 @@
             <figure>
                 <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
                 <div class="content has-text-justified" style="margin-top:10px">
-                    <p><b>Setting.</b> Calibration, and testing all come from the same distribution, 
-                        so Conformal Prediction's coverage guarantees formally hold.</p>
                     <p><b>Signal exists.</b> Token-level uncertainty (entropy, log-p, AU, EU) carries predictive 
                         power beyond random (accuracy/F1 &gt; 0.5).</p>
                     <p class="content has-text-justified" style="margin-top:10px"><b>Baselines vs. INSIGHT.</b> CP—though sequence-level—sometimes reaches ~0.7 under 
@@ -537,6 +538,9 @@
             </figure>
 
             <h3 class="title is-4">Distribution Shift Performance</h3>
+            <p class="content has-text-justified" style="margin-top:10px">
+            <b>Setting.</b> Object positions/orientations and unseen objects differ from training; 
+            Conformal Prediction’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</p>
             <p><b>How transferable are models under distribution shift?</b></p>
             <p>
             All models degraded under distribution shift. Strongly supervised models degraded least.
@@ -545,15 +549,16 @@
                 <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
                 <div class="content" style="margin-top:10px">
                 <p class="content has-text-justified" style="margin-top:10px">
-                    <b>Setting.</b> Object positions/orientations and unseen objects differ from training; 
-                        Conformal Prediction’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</p>
-                <p class="content has-text-justified" style="margin-top:10px">
                         <b>Label/regime mismatch.</b> The weak-training / strong-testing case can 
                         drop below F1=0.5 due to noisy supervision evaluated with strict labels under shift.</p>
                 </div>
             </figure>
 
             <h3 class="title is-4">Large In-Distribution Performance</h3>
+            <p class="content has-text-justified" style="margin-top:10px">
+                <b>Setting.</b> In-Distribution and Distribution Shift dataets are combined to increase training diversity while 
+                <i>maintaining exchangeability</i>, letting us assess whether scaling <i>within</i> 
+                distribution helps.</p>
             <p><b>Does adding more data help?</b></p>
             <p>
             Adding shifted data to increase training size did not consistently improve robustness. In fact, strongly supervised 
@@ -564,10 +569,6 @@
                 <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
                 <div class="content" style="margin-top:10px">
                 <p class="content has-text-justified" style="margin-top:10px">
-                <b>Setting.</b> In-Distribution and Distribution Shift dataets are combined to increase training diversity while 
-                <i>maintaining exchangeability</i>, letting us assess whether scaling <i>within</i> 
-                distribution helps.</p>
-                <p class="content has-text-justified" style="margin-top:10px">
                     <b>Takeaway.</b> Modeling the <i>temporal evolution</i> of token-level uncertainty with 
                         transformers is more predictive than static sequence-level scores, supporting sequential 
                         models for help detection.
@@ -576,6 +577,10 @@
             </figure>
 
             <h3 class="title is-4">Simulation OOD</h3>
+            <p class="content has-text-justified" style="margin-top:10px">
+                    <b>Setting.</b> Train on real-world π<sub>0</sub>-FAST, test on a <i>different</i> π<sub>0</sub>-FAST 
+                        fine-tuned on LIBERO → shift in tasks <i>and</i> policy behavior; a highly OOD stress test.
+                </p>
             <p><b>How do models transfer across simulation OOD?</b></p>
             <p>
                 Despite training on real-world kitchen tuned &pi;<sub>0</sub>-FAST data, INSIGHT transferred surprisingly well to 
@@ -588,13 +593,17 @@
                 <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
                 <div class="content" style="margin-top:10px">
                 <p class="content has-text-justified" style="margin-top:10px">
-                    <b>Setting.</b> Train on real-world π<sub>0</sub>-FAST, test on a <i>different</i> π<sub>0</sub>-FAST 
-                        fine-tuned on LIBERO → shift in tasks <i>and</i> policy behavior; a highly OOD stress test.
+                    <b>Robust transfer.</b> Strongly supervised INSIGHT generalizes to simulation, 
+                    with jumbo models nearing sim-only performance.
                 </p>
                 </div>
             </figure>
 
             <h3 class="title is-4">Help Timing & Frequency</h3>
+            <p class="content has-text-justified" style="margin-top:10px">
+                <b>What we measure.</b> Time-to-First-Help (TTFH), trigger counts on success vs. failure, 
+                and per-step trigger rates characterize <i>when</i> and <i>how often</i> interventions occur.
+                </p>
             <p><b>When and how often do models trigger help?</b></p>
             <p>
                 The strongly supervised model triggered help earliest and most frequently, maximizing failure coverage but risking 
@@ -640,10 +649,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <p class="content has-text-justified" style="margin-top:10px">
-                <b>What we measure.</b> Time-to-First-Help (TTFH), trigger counts on success vs. failure, 
-                and per-step trigger rates characterize <i>when</i> and <i>how often</i> interventions occur.
-                </p>
                 <p class="content has-text-justified" style="margin-top:10px">
                 <b>Early vs. conservative.</b> Strong supervision fires <i>earlier</i> on failing episodes (lower TTFH) 
                     and more often during fails (higher fail-rate), at the cost of more triggers on successes; 
@@ -779,7 +784,7 @@
         If you found this useful, please cite INSIGHT using the entry below.
         </p>
             <pre style="white-space:pre-wrap;background:#f9fafb;border:1px solid #ddd;border-radius:8px;padding:14px;overflow:auto">
-        @misc{karli2025insightinferencetimesequenceintrospection,
+        @misc{karli2025insight,
       title={INSIGHT: INference-time Sequence Introspection for Generating Help Triggers in Vision-Language-Action Models}, 
       author={Ulas Berk Karli and Ziyao Shangguan and Tesca FItzgerald},
       year={2025},
