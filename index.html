@@ -517,7 +517,7 @@
 
             <div class="content">
             <h3 class="title is-4">In-Distribution Performance</h3>
-            <p><b></b>Do uncertainty metrics provide predictive power for requesting help?</b></p>
+            <p><b>Do uncertainty metrics provide predictive power for requesting help?</b></p>
             <p>
             <p>
             Yes. Across all experiments, token-level uncertainty signals (entropy, log-probability, aleatoric and epistemic uncertainty) 
@@ -538,12 +538,11 @@
                 </div>
             </figure>
 
-            <h4 class="title is-5">How transferable are models under distribution shift?</h4>
-            <p>
-                All models degraded under distribution shift. Strongly supervised models degraded least.
-            </p>
-
             <h3 class="title is-4">Distribution Shift Performance</h3>
+            <p><b>How transferable are models under distribution shift?</b></p>
+            <p>
+            All models degraded under distribution shift. Strongly supervised models degraded least.
+            </p>
             <figure>
                 <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
                 <div class="content" style="margin-top:10px">
@@ -556,14 +555,13 @@
                 </div>
             </figure>
 
-            <h4 class="title is-5">Does adding more data help?</h4>
-            <p>
-                Adding shifted data to increase training size did not consistently improve robustness. In fact, strongly supervised 
-                transformers sometimes saw small drops in performance. Weakly supervised models benefited more when evaluated with 
-                weak labels, but overall, label quality proved more important than sheer dataset size.
-            </p>
-
             <h3 class="title is-4">Large In-Distribution Performance</h3>
+            <p><b>Does adding more data help?</b></p>
+            <p>
+            Adding shifted data to increase training size did not consistently improve robustness. In fact, strongly supervised 
+            transformers sometimes saw small drops in performance. Weakly supervised models benefited more when evaluated with 
+            weak labels, but overall, label quality proved more important than sheer dataset size.
+            </p>
             <figure>
                 <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
                 <div class="content" style="margin-top:10px">
@@ -578,7 +576,8 @@
                 </div>
             </figure>
 
-            <h4 class="title is-5">How do models transfer across simulation OOD?</h4>
+            <h3 class="title is-4">Simulation OOD</h3>
+            <p><b>How do models transfer across simulation OOD?</b></p>
             <p>
                 Despite training on real-world kitchen tuned &pi;<sub>0</sub>-FAST data, INSIGHT transferred surprisingly well to 
                 simulation-based LIBERO tuned &pi;<sub>0</sub>-FAST data tests. Strongly supervised models, especially the jumbo variant, 
@@ -586,8 +585,6 @@
                 robust across environments and policy checkpoints, suggesting that strong-label introspection modules can generalize without 
                 retraining or re-annotation.
             </p>
-
-            <h3 class="title is-4">Simulation OOD</h3>
             <figure>
                 <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
                 <div class="content" style="margin-top:10px">
@@ -598,14 +595,13 @@
                 </div>
             </figure>
 
-            <h4 class="title is-5">When and how often do models trigger help?</h4>
+            <h3 class="title is-4">Help Timing & Frequency</h3>
+            <p><b>When and how often do models trigger help?</b></p>
             <p>
                 The strongly supervised model triggered help earliest and most frequently, maximizing failure coverage but risking 
                 over-intervention. Weakly supervised models were conservative, rarely interrupting successes but sometimes missing 
                 failures.
             </p>
-
-            <h3 class="title is-4">Help Timing & Frequency</h3>
             <div class="table-card">
                 <table class="table is-bordered is-striped is-hoverable is-fullwidth">
                     <thead>
