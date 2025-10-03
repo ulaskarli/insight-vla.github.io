@@ -134,7 +134,7 @@
                         <div class="column has-text-centered">
                             <div class="publication-links">
                                 <span class="link-block">
-                                    <a href="static/paper.pdf"
+                                    <a href="https://arxiv.org/abs/2510.01389"
                                         class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon"><i class="fas fa-file-pdf"></i></span>
                                         <span>Paper</span>
@@ -406,8 +406,8 @@
         <p class="content has-text-justified" style="margin-bottom:18px">
         If you would like to explore examples from our datasets, this interactive section allows you to 
         browse rollout videos filtered by <b>dataset</b> (In-Distribution, Distribution Shift, or Simulation-OOD) 
-        and by <b>outcome</b> (Success or Failure). These examples illustrate how our model behaves across 
-        different settings and why uncertainty-aware help detection is necessary.
+        and by <b>outcome</b> (Success or Failure). These examples illustrate how fine-tuned &pi;<sub>0</sub>-FAST 
+        behaves across different settings and why uncertainty-aware help detection is necessary.
         </p>
             <div class="field is-grouped is-grouped-multiline" style="margin-bottom:14px">
                 <div class="control">
@@ -515,13 +515,21 @@
             Paired Wilcoxon significance: * p&lt;0.05, ** p&lt;0.01. Higher is better unless noted.
             </p>
 
+            <div class="content">
+            <h4 class="title is-5">Do uncertainty metrics provide predictive power for requesting help?</h4>
+            <p>
+            <p>
+            Yes. Across all experiments, token-level uncertainty signals (entropy, log-probability, aleatoric and epistemic uncertainty) 
+            offered predictive power beyond random guessing (accuracy/F1 > 0.5).
+            </p>
+
             <h3 class="title is-4">In-Distribution Performance</h3>
             <figure>
                 <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
                 <div class="content" style="margin-top:10px">
                 <ul class="is-size-6">
-                    <li><b>Setting.</b> Tuning, calibration, and testing all come from the same distribution, 
-                        so CP’s coverage guarantees formally hold.</li>
+                    <li><b>Setting.</b> Calibration, and testing all come from the same distribution, 
+                        so Conformal Prediction's coverage guarantees formally hold.</li>
                     <li><b>Signal exists.</b> Token-level uncertainty (entropy, log-p, AU, EU) carries predictive 
                         power beyond random (accuracy/F1 &gt; 0.5).</li>
                     <li><b>Baselines vs. INSIGHT.</b> CP—though sequence-level—sometimes reaches ~0.7 under 
@@ -531,25 +539,37 @@
                 </div>
             </figure>
 
+            <h4 class="title is-5">How transferable are models under distribution shift?</h4>
+            <p>
+                All models degraded under distribution shift. Strongly supervised models degraded least.
+            </p>
+
             <h3 class="title is-4">Distribution Shift Performance</h3>
             <figure>
                 <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
                 <div class="content" style="margin-top:10px">
                 <ul class="is-size-6">
                     <li><b>Setting.</b> Object positions/orientations and unseen objects differ from training; 
-                        CP’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</li>
+                        Conformal Prediction’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</li>
                     <li><b>Label/regime mismatch.</b> The weak-training / strong-testing case can 
                         drop below F1=0.5 due to noisy supervision evaluated with strict labels under shift.</li>
                 </ul>
                 </div>
             </figure>
 
+            <h4 class="title is-5">Does adding more data help?</h4>
+            <p>
+                Adding shifted data to increase training size did not consistently improve robustness. In fact, strongly supervised 
+                transformers sometimes saw small drops in performance. Weakly supervised models benefited more when evaluated with 
+                weak labels, but overall, label quality proved more important than sheer dataset size.
+            </p>
+
             <h3 class="title is-4">Large In-Distribution Performance</h3>
             <figure>
                 <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
                 <div class="content" style="margin-top:10px">
                 <ul class="is-size-6">
-                    <li><b>Setting.</b> ID and Shift are combined to increase training diversity while 
+                    <li><b>Setting.</b> In-Distribution and Distribution Shift dataets are combined to increase training diversity while 
                         <i>maintaining exchangeability</i>, letting us assess whether scaling <i>within</i> 
                         distribution helps.</li>
                     <li><b>Takeaway.</b> Modeling the <i>temporal evolution</i> of token-level uncertainty with 
@@ -559,6 +579,15 @@
                 </div>
             </figure>
 
+            <h4 class="title is-5">How do models transfer across simulation OOD?</h4>
+            <p>
+                Despite training on real-world kitchen tuned &pi;<sub>0</sub>-FAST data, INSIGHT transferred surprisingly well to 
+                simulation-based LIBERO tuned &pi;<sub>0</sub>-FAST data tests. Strongly supervised models, especially the jumbo variant, 
+                reached accuracy and F1 approaching that of the sim-only benchmark. This shows that token-level uncertainty features are 
+                robust across environments and policy checkpoints, suggesting that strong-label introspection modules can generalize without 
+                retraining or re-annotation.
+            </p>
+
             <h3 class="title is-4">Simulation OOD</h3>
             <figure>
                 <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
@@ -566,11 +595,16 @@
                 <ul class="is-size-6">
                     <li><b>Setting.</b> Train on real-world π<sub>0</sub>-FAST, test on a <i>different</i> π<sub>0</sub>-FAST 
                         fine-tuned on LIBERO → shift in tasks <i>and</i> policy behavior; a highly OOD stress test.</li>
-                    <li><b>Compared variants.</b> Fig. 4 contrasts transformer variants (regular, jumbo, sim-only); 
-                        significance assessed by paired Wilcoxon.</li>
                 </ul>
                 </div>
             </figure>
+
+            <h4 class="title is-5">When and how often do models trigger help?</h4>
+            <p>
+                The strongly supervised model triggered help earliest and most frequently, maximizing failure coverage but risking 
+                over-intervention. Weakly supervised models were conservative, rarely interrupting successes but sometimes missing 
+                failures.
+            </p>
 
             <h3 class="title is-4">Help Timing & Frequency</h3>
             <div class="table-card">
@@ -626,7 +660,7 @@
     </section>
 
     <!-- Takeaways -->
-    <section id="discussion" class="section">
+    <!--section id="discussion" class="section">
     <div class="container is-max-desktop">
         <div class="eyebrow">Discussion</div>
         <h2 class="title is-3">Takeaways</h2>
@@ -635,15 +669,6 @@
         </p>
 
         <div class="content">
-        <h4 class="title is-5">Do uncertainty metrics provide predictive power for requesting help?</h4>
-        <p>
-            Yes. Across all experiments, token-level uncertainty signals (entropy, log-probability, aleatoric and epistemic uncertainty) 
-            offered predictive power beyond random guessing (accuracy/F1 > 0.5). The exception was the weak-training/strong-testing 
-            case under distribution shift, where noisy supervision mismatched strict evaluation, reducing F1 below 0.5. Importantly, 
-            this establishes the first benchmark for introspection in VLA models. Even conformal prediction (CP), though based only 
-            on aggregated sequence-level scores, occasionally achieved F1 ≈ 0.7 under weak-label evaluation, showing alignment when 
-            calibration and evaluation matched.
-        </p>
 
         <h4 class="title is-5">How does aggregate vs. sequential use of metrics affect performance?</h4>
         <p>
@@ -661,62 +686,68 @@
             conservative—triggering less often, missing failures, but remaining competitive when evaluated under weak labels. 
             CP calibrated on weak labels outperformed in weak-label tests but lagged behind transformers overall.
         </p>
-
-        <h4 class="title is-5">When and how often do models trigger help?</h4>
-        <p>
-            The strongly supervised model triggered help earliest and most frequently, maximizing failure coverage but risking 
-            over-intervention. Weakly supervised models were conservative, rarely interrupting successes but sometimes missing 
-            failures. CP offered middle-ground behavior with moderate timing and frequency. The optimal choice depends on whether 
-            safety (catching failures early) or unobtrusiveness is prioritized.
-        </p>
-
-        <h4 class="title is-5">How transferable are models under distribution shift?</h4>
-        <p>
-            All models degraded under distribution shift. Strongly supervised models degraded least. CP maintained high recall but 
-            incurred many false positives and low accuracy, showing the difficulty of calibrating sequence-level scores when 
-            assumptions are violated. INSIGHT generally balanced performance better, particularly under strong-label tests, where 
-            temporal modeling offered more reliable help triggers than CP.
-        </p>
-
-        <h4 class="title is-5">Does adding more data help?</h4>
-        <p>
-            Adding shifted data to increase training size did not consistently improve robustness. In fact, strongly supervised 
-            transformers sometimes saw small drops in performance. Weakly supervised models benefited more when evaluated with 
-            weak labels, but overall, label quality proved more important than sheer dataset size.
-        </p>
-
-        <h4 class="title is-5">How do models transfer across simulation OOD?</h4>
-        <p>
-            Despite training on real-world kitchen data, INSIGHT transferred surprisingly well to simulation-based OOD tests using 
-            LIBERO. Strongly supervised models, especially the jumbo variant, reached accuracy and F1 approaching that of the 
-            sim-only benchmark. This shows that token-level uncertainty features are robust across environments and policy checkpoints, 
-            suggesting that strong-label introspection modules can generalize without retraining or re-annotation.
-        </p>
         </div>
     </div>
-    </section>
+    </section-->
 
     <!--Conclusion-->
-    <section id="conclusion" class="section">
+    <!--section id="conclusion" class="section">
         <div class="container is-max-desktop">
-            <div class="eyebrow">Summary</div>
+            <div class="eyebrow">Takeaways</div>
             <h2 class="title is-3">Conclusion & Future Directions</h2>
 
             <div class="content">
                 <ul>
-                    <li><strong>Token-level introspection works:</strong> modeling temporal uncertainty with a compact
+                    <li><strong>Token-level introspection works.:</strong> modeling temporal uncertainty with a compact
                         transformer yields earlier, more reliable help triggers than static scores.</li>
-                    <li><strong>Supervision trade-off:</strong> strong labels offer the best timing fidelity; weak
+                    <li><strong>Supervision trade-off is important.:</strong> strong labels offer the best timing fidelity; weak
                         labels remain competitive when train/test granularity aligns—making large-scale deployment
                         practical.</li>
-                    <li><strong>Selective intervention:</strong> INSIGHT reduces unnecessary interrupts on success
+                    <li><strong>Selective intervention :</strong> INSIGHT reduces unnecessary interrupts on success
                         episodes while accelerating help on failures (lower TTFH, higher fail-trigger rate).</li>
                     <li><strong>Future directions:</strong> active data collection, adaptive thresholds, and
                         human-in-the-loop policies that leverage introspection for real-time recovery.</li>
                 </ul>
             </div>
         </div>
-    </section>
+    </section-->
+
+    <!-- Takeaways -->
+<section id="conclusion" class="section">
+  <div class="container is-max-desktop">
+    <div class="eyebrow">Takeaways</div>
+    <h2 class="title is-3">What INSIGHT Shows</h2>
+
+    <div class="content">
+      <ul>
+        <li><strong>Token-level introspection works.</strong> Modeling temporal uncertainty with a compact transformer yields earlier and more reliable help triggers than static, sequence-level scores.</li>
+
+        <li><strong>Supervision quality matters more than size.</strong> Strong (step-level) labels deliver the highest F1 and most precise timing; adding more data helps less than improving label granularity.</li>
+
+        <li><strong>Weak labels are viable when evaluation matches training.</strong> Episode-level (weak) supervision is scalable and remains competitive under weak-label tests, but underperforms with strict step-level evaluation.</li>
+
+        <li><strong>Temporal modeling beats aggregation.</strong> Transformers over token sequences consistently outperform conformal prediction based on aggregated entropy/perplexity, especially outside perfectly aligned settings.</li>
+
+        <li><strong>Choose your intervention style.</strong> Strongly-supervised models trigger earlier and more often on failures (lower TTFH, higher fail-rate) but may over-intervene; weak/CP variants are more conservative.</li>
+
+        <li><strong>Generalization under shift is hard—but tractable.</strong> All methods degrade under distribution shift; strongly-supervised transformers degrade least and maintain better balance of precision/recall.</li>
+
+        <li><strong>Transfer extends across domains and checkpoints.</strong> Models trained on real-world kitchen data transfer surprisingly well to LIBERO sim OOD; token-level uncertainty features remain stable across settings.</li>
+
+        <li><strong>CP is a useful baseline, not a substitute.</strong> Conformal prediction can reach decent F1 when calibration and evaluation align, but lacks the temporal capacity needed for robust help triggering.</li>
+      </ul>
+    </div>
+
+    <div class="content" style="margin-top:1rem">
+      <h3 class="title is-5" style="margin-top:.6em">Where to go next</h3>
+      <ul class="list-tight">
+        <li><strong>Active supervision:</strong> use help-trigger uncertainty to prioritize annotation and data collection.</li>
+        <li><strong>Adaptive thresholds:</strong> tune for safety vs. intrusiveness per task, user, or environment.</li>
+        <li><strong>Human-in-the-loop recovery:</strong> integrate triggers with teleop/corrective feedback for real-time mitigation.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
     <!-- BibTex -->
     <section id="bibtex" class="section">
@@ -726,12 +757,15 @@
         If you found this useful, please cite INSIGHT using the entry below.
         </p>
             <pre style="white-space:pre-wrap;background:#f9fafb;border:1px solid #ddd;border-radius:8px;padding:14px;overflow:auto">
-        @inproceedings{karli2026insight,
-        title={INSIGHT: Inference-time Sequence Introspection for Help-Triggering in Vision-Language-Action Models},
-        author={Karli, Ulas Berk and Shangguan, Ziyao and Fitzgerald, Tesca},
-        booktitle={arxiv},
-        year={2026}
-        }
+        @misc{karli2025insightinferencetimesequenceintrospection,
+      title={INSIGHT: INference-time Sequence Introspection for Generating Help Triggers in Vision-Language-Action Models}, 
+      author={Ulas Berk Karli and Ziyao Shangguan and Tesca FItzgerald},
+      year={2025},
+      eprint={2510.01389},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2510.01389}, 
+}
             </pre>
             <p><a href="static/bibtex.bib">Download .bib</a></p>
         </div>
