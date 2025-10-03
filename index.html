@@ -526,15 +526,13 @@
             <figure>
                 <img src="static/images/ID_sign.svg" alt="Boxplots of accuracy, F1 across 10 folds.">
                 <div class="content" style="margin-top:10px">
-                <ul class="is-size-6">
-                    <li><b>Setting.</b> Calibration, and testing all come from the same distribution, 
-                        so Conformal Prediction's coverage guarantees formally hold.</li>
-                    <li><b>Signal exists.</b> Token-level uncertainty (entropy, log-p, AU, EU) carries predictive 
-                        power beyond random (accuracy/F1 &gt; 0.5).</li>
-                    <li><b>Baselines vs. INSIGHT.</b> CP—though sequence-level—sometimes reaches ~0.7 under 
+                    <p><b>Setting.</b> Calibration, and testing all come from the same distribution, 
+                        so Conformal Prediction's coverage guarantees formally hold.</p>
+                    <p><b>Signal exists.</b> Token-level uncertainty (entropy, log-p, AU, EU) carries predictive 
+                        power beyond random (accuracy/F1 &gt; 0.5).</p>
+                    <p class="content has-text-justified" style="margin-top:10px"><b>Baselines vs. INSIGHT.</b> CP—though sequence-level—sometimes reaches ~0.7 under 
                         <i>weak-label</i> evaluation when calibration and evaluation align, but temporal transformers 
-                        remain stronger overall.</li>
-                </ul>
+                        remain stronger overall.</p>
                 </div>
             </figure>
 
@@ -546,12 +544,12 @@
             <figure>
                 <img src="static/images/OOD.svg" alt="Boxplots under distribution shift.">
                 <div class="content" style="margin-top:10px">
-                <ul class="is-size-6">
-                    <li><b>Setting.</b> Object positions/orientations and unseen objects differ from training; 
-                        Conformal Prediction’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</li>
-                    <li><b>Label/regime mismatch.</b> The weak-training / strong-testing case can 
-                        drop below F1=0.5 due to noisy supervision evaluated with strict labels under shift.</li>
-                </ul>
+                <p class="content has-text-justified" style="margin-top:10px">
+                    <b>Setting.</b> Object positions/orientations and unseen objects differ from training; 
+                        Conformal Prediction’s exchangeability assumption breaks, so results are diagnostic rather than guaranteed.</p>
+                <p class="content has-text-justified" style="margin-top:10px">
+                        <b>Label/regime mismatch.</b> The weak-training / strong-testing case can 
+                        drop below F1=0.5 due to noisy supervision evaluated with strict labels under shift.</p>
                 </div>
             </figure>
 
@@ -565,14 +563,15 @@
             <figure>
                 <img src="static/images/LID.svg" alt="Large-scale in-distribution results.">
                 <div class="content" style="margin-top:10px">
-                <ul class="is-size-6">
-                    <li><b>Setting.</b> In-Distribution and Distribution Shift dataets are combined to increase training diversity while 
-                        <i>maintaining exchangeability</i>, letting us assess whether scaling <i>within</i> 
-                        distribution helps.</li>
-                    <li><b>Takeaway.</b> Modeling the <i>temporal evolution</i> of token-level uncertainty with 
+                <p class="content has-text-justified" style="margin-top:10px">
+                <b>Setting.</b> In-Distribution and Distribution Shift dataets are combined to increase training diversity while 
+                <i>maintaining exchangeability</i>, letting us assess whether scaling <i>within</i> 
+                distribution helps.</p>
+                <p class="content has-text-justified" style="margin-top:10px">
+                    <b>Takeaway.</b> Modeling the <i>temporal evolution</i> of token-level uncertainty with 
                         transformers is more predictive than static sequence-level scores, supporting sequential 
-                        models for help detection.</li>
-                </ul>
+                        models for help detection.
+                </p>
                 </div>
             </figure>
 
@@ -588,10 +587,10 @@
             <figure>
                 <img src="static/images/Sim_OOD.svg" alt="Simulation OOD results.">
                 <div class="content" style="margin-top:10px">
-                <ul class="is-size-6">
-                    <li><b>Setting.</b> Train on real-world π<sub>0</sub>-FAST, test on a <i>different</i> π<sub>0</sub>-FAST 
-                        fine-tuned on LIBERO → shift in tasks <i>and</i> policy behavior; a highly OOD stress test.</li>
-                </ul>
+                <p class="content has-text-justified" style="margin-top:10px">
+                    <b>Setting.</b> Train on real-world π<sub>0</sub>-FAST, test on a <i>different</i> π<sub>0</sub>-FAST 
+                        fine-tuned on LIBERO → shift in tasks <i>and</i> policy behavior; a highly OOD stress test.
+                </p>
                 </div>
             </figure>
 
@@ -645,11 +644,11 @@
                 <b>What we measure.</b> Time-to-First-Help (TTFH), trigger counts on success vs. failure, 
                 and per-step trigger rates characterize <i>when</i> and <i>how often</i> interventions occur.
                 </p>
-                <ul class="is-size-6">
-                <li><b>Early vs. conservative.</b> Strong supervision fires <i>earlier</i> on failing episodes (lower TTFH) 
+                <p class="content has-text-justified" style="margin-top:10px">
+                <b>Early vs. conservative.</b> Strong supervision fires <i>earlier</i> on failing episodes (lower TTFH) 
                     and more often during fails (higher fail-rate), at the cost of more triggers on successes; 
-                    CP-W and Weak are more conservative (fewer success triggers) but react later/less on fails.</li>
-                </ul>
+                    CP-W and Weak are more conservative (fewer success triggers) but react later/less on fails.
+                </p>
             </div>
         </div>
     </section>
